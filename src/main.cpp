@@ -66,20 +66,23 @@ void transformationsExercise()
 
     Matrix4x4 inverseTranslationMat;
     //(...)
-    //std::cout << "The inverse of matrix \n\n" << translationMat << "\n is \n\n" << inverseTranslationMat << std::endl;
-    //std::cout << "And their multiplication should thus give the identity matrix:\n\n";
-    // (...)
+	translationMat.inverse(inverseTranslationMat);
+    std::cout << "The inverse of matrix \n\n" << translationMat << "\n is \n\n" << inverseTranslationMat << std::endl;
+    std::cout << "And their multiplication should thus give the identity matrix:\n\n";
+	Matrix4x4 newIdMax = inverseTranslationMat * translationMat;
+	std::cout << "The content of multiplicacion is: \n" << std::endl;
+	std::cout << newIdMax << separator << std::endl;
 
     // Combine here some transforms, and visualize the result
     std::cout << separatorStar << "Combine transforms and visualize the result" << separatorStar << std::endl;
 
-    //Matrix4x4 scaleTranslate = (...);
-    //std::cout << "The content of matrix scaleTranslate is: \n" << std::endl;
-    //std::cout << scaleTranslate << separator << std::endl;
+    Matrix4x4 scaleTranslate = scaleMatrix * translationMat;
+    std::cout << "The content of matrix scaleTranslate is: \n" << std::endl;
+    std::cout << scaleTranslate << separator << std::endl;
 
-    //Matrix4x4 translateScale = (...);
-    //std::cout << "The content of matrix translateScale is: \n" << std::endl;
-    //std::cout << translateScale << separator << std::endl;
+    Matrix4x4 translateScale = translationMat * scaleMatrix;
+    std::cout << "The content of matrix translateScale is: \n" << std::endl;
+    std::cout << translateScale << separator << std::endl;
 }
 
 void normalTransformExercise()
