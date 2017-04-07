@@ -130,14 +130,18 @@ void paintingAnImageExercise()
     size_t resX, resY;
     resX = 512;
     resY = 512;
+	float pndcx = 0;
+	float pndcy = 0;
     Film film(resX, resY);
 
     for(unsigned int col = 0; col < resX; col++)
         {
             for(unsigned int row = 0; row < resY; row++)
             {
-                Vector3D color(255, 0, 0);
-                film.setPixelValue(col, row, color);
+				pndcx = (col + 0.5) / resX;
+				pndcy = (row + 0.5) / resY;
+				Vector3D color(pndcx,pndcy,0);
+				film.setPixelValue(col, row, color);
             }
         }
 
@@ -244,8 +248,8 @@ int main()
 
     // ASSIGNMENT 1
     //transformationsExercise();
-    normalTransformExercise();
-    //paintingAnImageExercise();
+    //normalTransformExercise();
+    paintingAnImageExercise();
     //filteringAnImageExercise();
 
     // ASSIGNMENT 2
