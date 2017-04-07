@@ -106,8 +106,22 @@ void normalTransformExercise()
 
     Vector3D vTransformed = S.transformVector(v);
     std::cout << "Vector v\' = " << vTransformed << "\n" << std::endl;
+    
+	Vector3D nTransformed = S.transformVector(n);
+	std::cout << "Vector n\' = " << nTransformed << "\n" << std::endl;
 
-    // (...)
+	double dotProd = dot(nTransformed, vTransformed);
+	std::cout << "dot (n\',v\') = " << dotProd << "\n" << std::endl;
+
+	Matrix4x4 transInvMat;
+	Matrix4x4 transMat;
+	S.transpose(transMat);
+	transMat.inverse(transInvMat);
+	Vector3D nGoodTransformed = transInvMat.transformVector(n);
+	std::cout << "Vector n\' = " << nGoodTransformed << "\n" << std::endl;
+
+	double goodDotProd = dot(nGoodTransformed, vTransformed);
+	std::cout << "dot (n\',v\') = " << goodDotProd << "\n" << std::endl;
 }
 
 void paintingAnImageExercise()
@@ -229,8 +243,8 @@ int main()
     std::cout << separator << "RTIS - Ray Tracer for \"Imatge Sintetica\"" << separator << std::endl;
 
     // ASSIGNMENT 1
-    transformationsExercise();
-    //normalTransformExercise();
+    //transformationsExercise();
+    normalTransformExercise();
     //paintingAnImageExercise();
     //filteringAnImageExercise();
 
