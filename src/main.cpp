@@ -36,21 +36,26 @@ void transformationsExercise()
     std::cout << translationMat << separator << std::endl;
 
     // Scale Matrix
-    //(...)
-    //std::cout << "The content of matrix scaleMatrix is: \n" << std::endl;
-    //std::cout << scaleMatrix << separator << std::endl;
+	double Sx, Sy, Sz;
+	Sx = 2; Sy = 1; Sz = -1;
+	Vector3D scaleVect(Sx, Sy, Sz);
+	Matrix4x4 scaleMatrix = Matrix4x4::scale(scaleVect);
+	std::cout << "The content of matrix scaleMatrix is: \n" << std::endl;
+    std::cout << scaleMatrix << separator << std::endl;
 
     // Rotate around X Matrix
     double angleInDegrees = 60;
     double thetaInRadians = Utils::degreesToRadians(angleInDegrees);
-    //(...)
-    //std::cout << "The content of matrix rotateXMatrix is: \n" << std::endl;
-    //std::cout << rotateXMatrix << separator << std::endl;
+	Matrix4x4 rotateXMatrix = Matrix4x4::rotate(thetaInRadians, Vector3D(1, 0, 0));
+	std::cout << "The content of matrix rotateXMatrix is: \n" << std::endl;
+    std::cout << rotateXMatrix << separator << std::endl;
 
     // Rotate around an arbitrary axis Matrix
-    //(...)
-    //std::cout << "The content of matrix rotateArtitraryAxisMatrix is: \n" << std::endl;
-    //std::cout << rotateArtitraryAxisMatrix << separator << std::endl;
+	double angleTorotate = 30;
+	double angleTorotateinDegrees = Utils::degreesToRadians(angleTorotate);
+	Matrix4x4 rotateArbitraryAxisMatrix = Matrix4x4::rotate(angleTorotateinDegrees, Vector3D(1, 1, 1));
+	std::cout << "The content of matrix rotateArtitraryAxisMatrix is: \n" << std::endl;
+    std::cout << rotateArbitraryAxisMatrix << separator << std::endl;
 
     // Transposed and Inversion
     std::cout << separatorStar << "Inverting and Transposing a Matrix" << separatorStar << std::endl;
@@ -221,7 +226,7 @@ int main()
     std::cout << separator << "RTIS - Ray Tracer for \"Imatge Sintetica\"" << separator << std::endl;
 
     // ASSIGNMENT 1
-    //transformationsExercise();
+    transformationsExercise();
     //normalTransformExercise();
     //paintingAnImageExercise();
     //filteringAnImageExercise();
