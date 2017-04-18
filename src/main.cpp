@@ -176,6 +176,42 @@ void filteringAnImageExercise()
 
     // Filter-related variables
     // Declare here your filter-related variables
+	int iter = 5;
+	int fSize = 5;
+	int avg = fSize*fSize;
+	int radius = fSize*0.5;
+	Film * aux1, * aux2,* aux3;
+	aux1 = &f1;
+	aux2 = &f2;
+
+	Vector3D pColor = Vector3D();
+	for(int i = 0; i < iter;i++){
+		for (int lin = 0; lin<resX; lin++)
+		{
+			for (int col = 0; col<resY; col++)
+			{
+				//Caso Perfecto
+				if (lin >= radius && lin < resY - radius) {
+					if (col >= radius && col < resX - radius) {
+						
+						for (int x = lin - radius; x <= lin + radius; x++) {
+							for (int y = col - radius; y <= col + radius; y++) {
+								pColor += aux1->getPixelValue(x, y);
+							}
+						}
+						pColor /= avg;
+						aux2->setPixelValue(lin, col, pColor);
+						pColor -= pColor;
+					}
+				}
+			}
+		}
+		aux3 = aux1;
+		aux1 = aux2;
+		aux2 = aux3;
+	}
+
+
     // (e.g., FILTER SIZE)
     //(...)
 
@@ -184,6 +220,7 @@ void filteringAnImageExercise()
 
     // DO NOT FORGET TO SAVE YOUR IMAGE!
     //(...)
+	aux1->save();
 }
 
 void completeSphereClassExercise()
@@ -249,8 +286,8 @@ int main()
     // ASSIGNMENT 1
     //transformationsExercise();
     //normalTransformExercise();
-    paintingAnImageExercise();
-    //filteringAnImageExercise();
+    //paintingAnImageExercise();
+    filteringAnImageExercise();
 
     // ASSIGNMENT 2
     //eqSolverExercise();
