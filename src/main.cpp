@@ -246,16 +246,6 @@ void filteringAnImageExercise()
 		aux1 = aux2;
 		aux2 = aux3;
 	}
-
-
-    // (e.g., FILTER SIZE)
-    //(...)
-
-    // Implement here your image filtering algorithm
-    //(...)
-
-    // DO NOT FORGET TO SAVE YOUR IMAGE!
-    //(...)
 	aux1->save();
 }
 
@@ -265,17 +255,13 @@ void completeSphereClassExercise()
     // (....)
 }
 
-void eqSolverExercise()
+void eqSolverExercise(double A, double B, double C)
 {
     EqSolver solver;
     rootValues roots;
 
-    double A, B, C;
-
     // (...)
-
-	bool hasRoots = true;
-    //bool hasRoots = solver.rootQuadEq(A, B, C, roots);
+    bool hasRoots = solver.rootQuadEq(A, B, C, roots);
 
     if(!hasRoots)
     {
@@ -285,6 +271,10 @@ void eqSolverExercise()
     {
         // SHOW THE SOLUTIONS OF THE EQUATION
         // (...)
+		std::cout << "Equation has the following solutions:" <<std::endl;
+		for (int i = 0; i < roots.nValues; i++) {
+			std::cout << "t" << i << ": "<< roots.values[i] << std::endl;
+		}
     }
 }
 
@@ -323,13 +313,15 @@ int main()
     //transformationsExercise();
     //normalTransformExercise();
     //paintingAnImageExercise();
-    filteringAnImageExercise();
+    //filteringAnImageExercise();
 
     // ASSIGNMENT 2
-    //eqSolverExercise();
-    //completeSphereClassExercise();
+    //eqSolverExercise(4,0,1);
+    completeSphereClassExercise();
     //raytrace();
 
-    std::cout << "\n\n" << std::endl;
+    std::cout << "Press a key to exit \n\n" << std::endl;
+	int exit;
+	std::cin >> exit;
     return 0;
 }
