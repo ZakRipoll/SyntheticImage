@@ -173,53 +173,73 @@ void filteringAnImageExercise()
                 f1.setPixelValue(col, lin, Vector3D(1, 1, 0));
         }
     }
-
     // Filter-related variables
     // Declare here your filter-related variables
-	int iter = 5;
-	int fSize = 5;
-	int avg = fSize*fSize;
+	int iter = 100;
+	int fSize = 9;
+	int avg = 0;
 	int radius = fSize*0.5;
-  int ilin, icol, flin, fcol;
+	int ilin, icol, flin, fcol;
 	Film * aux1, * aux2,* aux3;
 	aux1 = &f1;
 	aux2 = &f2;
 
 	Vector3D pColor = Vector3D();
-	for(int i = 0; i < iter;i++)
-  {
-		for (int lin = 0; lin<resX; lin++)
-		{
-      if( lin <= radius )
-      {
-        ilin = -lin;
-      }
-      else if( lin + radius => resX )
-      {
-        flin = resX;
-      }
+	/*
+	for(int i = 0; i < iter;i++){
+		for (int lin = 0; lin<resX; lin++){
+			
+			if( lin <= radius ){
+				ilin = lin;
+			}
 
-			for (int col = 0; col<resY; col++)
-			{
-        if( col <= radius )
-        {
-          icol = -col;
-        }
-        else if( col + radius => resY )
-        {
-          fcol = resY;
-        }
+			else if( lin + radius >= resX ){
+              flin = lin - resX-1;
+			}
 
-    		for (int x = ilin; x <= flin; x++)
-        {
-    			for (int y = icol; y <= fcol; y++)
-          {
-    				pColor += aux1->getPixelValue(x, y);
+			for (int col = 0; col<resY; col++){
+				if( col <= radius ){
+					icol = col;
+				}
+				else if( col + radius >= resY ){
+					fcol = col - resY-1;
+				}
+
+    			for (int x = lin - ilin; x < lin + flin; x++){
+    				for (int y = col - icol; y < col + fcol; y++){
+    					pColor += aux1->getPixelValue(x, y);
+    				}
     			}
-    		}
-    		pColor /= avg;
-    		aux2->setPixelValue(lin, col, pColor);
-    		pColor -= pColor;
+    			pColor /= avg;
+    			aux2->setPixelValue(lin, col, pColor);
+    			pColor -= pColor;
+			}
+		}
+		aux3 = aux1;
+		aux1 = aux2;
+		aux2 = aux3;
+	}*/
+
+	for (int i = 0; i < iter; i++) {
+
+		for (int lin = 0; lin<resX; lin++) {
+
+			for (int col = 0; col<resY; col++) {
+
+				for (int x = lin - radius; x <= lin + radius; x++) {
+
+					for (int y = col - radius; y <= col + radius; y++) {
+
+						if (x<0 || x>resX - 1 || y<0 || y>resY-1) { continue; }
+								
+						pColor += aux1->getPixelValue(x, y);
+						avg++;
+					}
+				}
+				pColor /= avg;
+				avg = 0;
+				aux2->setPixelValue(lin, col, pColor);
+				pColor -= pColor;
 			}
 		}
 		aux3 = aux1;
