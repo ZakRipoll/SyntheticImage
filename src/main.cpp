@@ -106,7 +106,7 @@ void normalTransformExercise()
 
     Vector3D vTransformed = S.transformVector(v);
     std::cout << "Vector v\' = " << vTransformed << "\n" << std::endl;
-    
+
 	Vector3D nTransformed = S.transformVector(n);
 	std::cout << "Vector n\' = " << nTransformed << "\n" << std::endl;
 
@@ -180,30 +180,46 @@ void filteringAnImageExercise()
 	int fSize = 5;
 	int avg = fSize*fSize;
 	int radius = fSize*0.5;
+  int ilin, icol, flin, fcol;
 	Film * aux1, * aux2,* aux3;
 	aux1 = &f1;
 	aux2 = &f2;
 
 	Vector3D pColor = Vector3D();
-	for(int i = 0; i < iter;i++){
+	for(int i = 0; i < iter;i++)
+  {
 		for (int lin = 0; lin<resX; lin++)
 		{
+      if( lin <= radius )
+      {
+        ilin = -lin;
+      }
+      else if( lin + radius => resX )
+      {
+        flin = resX;
+      }
+
 			for (int col = 0; col<resY; col++)
 			{
-				//Caso Perfecto
-				if (lin >= radius && lin < resY - radius) {
-					if (col >= radius && col < resX - radius) {
-						
-						for (int x = lin - radius; x <= lin + radius; x++) {
-							for (int y = col - radius; y <= col + radius; y++) {
-								pColor += aux1->getPixelValue(x, y);
-							}
-						}
-						pColor /= avg;
-						aux2->setPixelValue(lin, col, pColor);
-						pColor -= pColor;
-					}
-				}
+        if( col <= radius )
+        {
+          icol = -col;
+        }
+        else if( col + radius => resY )
+        {
+          fcol = resY;
+        }
+
+    		for (int x = ilin; x <= flin; x++)
+        {
+    			for (int y = icol; y <= fcol; y++)
+          {
+    				pColor += aux1->getPixelValue(x, y);
+    			}
+    		}
+    		pColor /= avg;
+    		aux2->setPixelValue(lin, col, pColor);
+    		pColor -= pColor;
 			}
 		}
 		aux3 = aux1;
