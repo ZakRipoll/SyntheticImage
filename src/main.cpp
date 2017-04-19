@@ -253,6 +253,30 @@ void completeSphereClassExercise()
 {
     // Make your intersection tests here
     // (....)
+	Matrix4x4 objectToWorld = Matrix4x4();
+	objectToWorld = objectToWorld.translate(Vector3D(0,0,3));
+	double sRadius = 1.0;
+	Sphere sphere = Sphere(sRadius, objectToWorld);
+	std::cout << sphere.toString() << std::endl;
+
+	Ray r1 = Ray(Vector3D(0, 0, 0), Vector3D(0, 0, 1));
+	Ray r2 = Ray(Vector3D(0, 0, 0), Vector3D(0, 1, 0));
+
+	if (sphere.rayIntersectP(r1)) {
+		std::cout << "El rayo 1 intersecta" << std::endl;
+	}
+	else {
+		std::cout << "El rayo 1 no intersecta" << std::endl;
+	}
+
+	if (sphere.rayIntersectP(r2)) {
+		std::cout << "El rayo 2 intersecta" << std::endl;
+	}
+	else {
+		std::cout << "El rayo 2 no intersecta" << std::endl;
+	}
+
+
 }
 
 void eqSolverExercise(double A, double B, double C)
