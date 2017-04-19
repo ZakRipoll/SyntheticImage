@@ -13,7 +13,7 @@ bool Sphere::rayIntersectP(const Ray &ray) const
     // form A*t^2 + B*t + C = 0, where:
 
     double A = pow(r.d.x,2) + pow(r.d.y, 2) + pow(r.d.z, 2);
-    double B = 2 * (r.d.x + r.d.y + r.d.z);
+    double B = 2 * ((r.d.x*r.o.x) + (r.d.y* r.o.y) + (r.d.z*r.o.z));
     double C = pow(r.o.x, 2) + pow(r.o.y, 2) + pow(r.o.z, 2) - pow(radius,2);
 
     // Now we need to solve this quadratic equation for t
