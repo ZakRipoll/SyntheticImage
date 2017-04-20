@@ -176,7 +176,7 @@ void filteringAnImageExercise()
     // Filter-related variables
     // Declare here your filter-related variables
 	int iter = 100;
-	int fSize = 9;
+	int fSize = 11;
 	int avg = 0;
 	int radius = fSize*0.5;
 	int ilin, icol, flin, fcol;
@@ -185,8 +185,9 @@ void filteringAnImageExercise()
 	aux2 = &f2;
 
 	Vector3D pColor = Vector3D();
-	/*
+	
 	for(int i = 0; i < iter;i++){
+		ilin = icol = flin = fcol = radius;
 		for (int lin = 0; lin<resX; lin++){
 			
 			if( lin <= radius ){
@@ -194,32 +195,36 @@ void filteringAnImageExercise()
 			}
 
 			else if( lin + radius >= resX ){
-              flin = lin - resX-1;
+				flin = resX - lin;
 			}
+
+			icol = fcol = radius;
 
 			for (int col = 0; col<resY; col++){
 				if( col <= radius ){
 					icol = col;
 				}
 				else if( col + radius >= resY ){
-					fcol = col - resY-1;
+					fcol = resY - col;
 				}
 
     			for (int x = lin - ilin; x < lin + flin; x++){
     				for (int y = col - icol; y < col + fcol; y++){
     					pColor += aux1->getPixelValue(x, y);
+						avg++;
     				}
     			}
     			pColor /= avg;
     			aux2->setPixelValue(lin, col, pColor);
     			pColor -= pColor;
+				avg = 0;
 			}
 		}
 		aux3 = aux1;
 		aux1 = aux2;
 		aux2 = aux3;
-	}*/
-
+	}
+	/*
 	for (int i = 0; i < iter; i++) {
 
 		for (int lin = 0; lin<resX; lin++) {
@@ -245,7 +250,7 @@ void filteringAnImageExercise()
 		aux3 = aux1;
 		aux1 = aux2;
 		aux2 = aux3;
-	}
+	}*/
 	aux1->save();
 }
 
@@ -337,11 +342,11 @@ int main()
     //transformationsExercise();
     //normalTransformExercise();
     //paintingAnImageExercise();
-    //filteringAnImageExercise();
+    filteringAnImageExercise();
 
     // ASSIGNMENT 2
     //eqSolverExercise(4,0,1);
-    completeSphereClassExercise();
+    //completeSphereClassExercise();
     //raytrace();
 
     std::cout << "Press a key to exit \n\n" << std::endl;
