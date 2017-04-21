@@ -146,7 +146,7 @@ void paintingAnImageExercise()
         }
 
     // Save the final result to file
-    film.save();
+    film.save("happyColours");
 }
 
 void filteringAnImageExercise()
@@ -161,9 +161,14 @@ void filteringAnImageExercise()
     // Create the original image
     //  Draw a circle centered at centerX, centerY (in pixels, image space)
     //   and with ray r (also in pixels)
-    int centerX = resX / 2;
+    int centerX = resX / 4;
     int centerY = resY / 2;
-    int r = std::min(centerX, centerY)/2;
+
+	int center2X = 3 * resX/4;
+	int center2Y = resY / 2;
+
+    int r = std::min(centerX, centerY);
+
     for(int lin=0; lin<resX; lin++)
     {
         for(int col=0; col<resY; col++)
@@ -173,10 +178,22 @@ void filteringAnImageExercise()
                 f1.setPixelValue(col, lin, Vector3D(1, 1, 0));
         }
     }
+
+	for (int lin = 0; lin<resX; lin++)
+	{
+		for (int col = 0; col<resY; col++)
+		{
+			// Use the equation of the sphere to determine the pixel color
+			if ((lin - center2X)*(lin - center2X) + (col - center2Y)*(col - center2Y) < r*r)
+				f1.setPixelValue(col, lin, Vector3D(1, 1, 0));
+		}
+	}
+
+	f1.save("original");
     // Filter-related variables
     // Declare here your filter-related variables
-	int iter = 100;
-	int fSize = 11;
+	int iter =100;
+	int fSize = 9;
 	int avg = 0;
 	int radius = fSize*0.5;
 	int ilin, icol, flin, fcol;
@@ -185,7 +202,8 @@ void filteringAnImageExercise()
 	aux2 = &f2;
 
 	Vector3D pColor = Vector3D();
-	
+
+	//GABRIELA'S and ISAAC'S and WAY
 	for(int i = 0; i < iter;i++){
 		ilin = icol = flin = fcol = radius;
 		for (int lin = 0; lin<resX; lin++){
@@ -194,8 +212,8 @@ void filteringAnImageExercise()
 				ilin = lin;
 			}
 
-			else if( lin + radius >= resX ){
-				flin = resX - lin;
+			else if( lin + radius > resX -1){
+				flin = resX - lin - 1;
 			}
 
 			icol = fcol = radius;
@@ -204,12 +222,11 @@ void filteringAnImageExercise()
 				if( col <= radius ){
 					icol = col;
 				}
-				else if( col + radius >= resY ){
-					fcol = resY - col;
+				else if( col + radius > resY -1 ){
+					fcol = resY - col -1;
 				}
-
-    			for (int x = lin - ilin; x < lin + flin; x++){
-    				for (int y = col - icol; y < col + fcol; y++){
+    			for (int x = lin - ilin; x <= (lin + flin); x++){
+    				for (int y = col - icol; y <= (col + fcol); y++){
     					pColor += aux1->getPixelValue(x, y);
 						avg++;
     				}
@@ -224,6 +241,10 @@ void filteringAnImageExercise()
 		aux1 = aux2;
 		aux2 = aux3;
 	}
+
+	//ANOTHER WAY TO COMPUTE THE SAME
+	//AUREL'S WAY (FOR NOOBS)
+
 	/*
 	for (int i = 0; i < iter; i++) {
 
@@ -251,7 +272,7 @@ void filteringAnImageExercise()
 		aux1 = aux2;
 		aux2 = aux3;
 	}*/
-	aux1->save();
+	aux1->save("BluredImage");
 }
 
 void completeSphereClassExercise()
@@ -329,7 +350,7 @@ void raytrace()
     PerspectiveCamera camPersp(cameraToWorld, fovRadians, film);
 
     // Save the final result to file
-    film.save();
+    film.save("NoSeQueEs");
 }
 
 int main()
