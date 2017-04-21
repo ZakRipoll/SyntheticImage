@@ -11,7 +11,6 @@
 #include "cameras/ortographic.h"
 #include "cameras/perspective.h"
 
-
 void transformationsExercise()
 {
     /* *************** */
@@ -149,6 +148,20 @@ void paintingAnImageExercise()
     film.save("happyColours");
 }
 
+void generateSphere(int radius, int centerX, int centerY, Film * f1) {
+
+	for (int lin = 0; lin<f1->getHeight(); lin++)
+	{
+		for (int col = 0; col<f1->getWidth(); col++)
+		{
+			// Use the equation of the sphere to determine the pixel color
+			if ((lin - centerX)*(lin - centerX) + (col - centerY)*(col - centerY) < radius*radius)
+				f1->setPixelValue(col, lin, Vector3D(1, 1, 0));
+		}
+	}
+	f1->save("original");
+}
+
 void filteringAnImageExercise()
 {
     // Create two instances of the film class with the same resolution
@@ -161,35 +174,12 @@ void filteringAnImageExercise()
     // Create the original image
     //  Draw a circle centered at centerX, centerY (in pixels, image space)
     //   and with ray r (also in pixels)
-    int centerX = resX / 4;
+    int centerX = resX / 2;
     int centerY = resY / 2;
+    int r = std::min(centerX, centerY)/2;
+	//Function to generate a sphere in the Film passed by Pointer
+	generateSphere(r,centerX,centerY,&f1);
 
-	int center2X = 3 * resX/4;
-	int center2Y = resY / 2;
-
-    int r = std::min(centerX, centerY);
-
-    for(int lin=0; lin<resX; lin++)
-    {
-        for(int col=0; col<resY; col++)
-        {
-            // Use the equation of the sphere to determine the pixel color
-            if( (lin-centerX)*(lin-centerX) + (col-centerY)*(col-centerY) < r*r )
-                f1.setPixelValue(col, lin, Vector3D(1, 1, 0));
-        }
-    }
-
-	for (int lin = 0; lin<resX; lin++)
-	{
-		for (int col = 0; col<resY; col++)
-		{
-			// Use the equation of the sphere to determine the pixel color
-			if ((lin - center2X)*(lin - center2X) + (col - center2Y)*(col - center2Y) < r*r)
-				f1.setPixelValue(col, lin, Vector3D(1, 1, 0));
-		}
-	}
-
-	f1.save("original");
     // Filter-related variables
     // Declare here your filter-related variables
 	int iter =100;
@@ -200,7 +190,6 @@ void filteringAnImageExercise()
 	Film * aux1, * aux2,* aux3;
 	aux1 = &f1;
 	aux2 = &f2;
-
 	Vector3D pColor = Vector3D();
 
 	//GABRIELA'S and ISAAC'S and WAY
@@ -211,13 +200,10 @@ void filteringAnImageExercise()
 			if( lin <= radius ){
 				ilin = lin;
 			}
-
 			else if( lin + radius > resX -1){
 				flin = resX - lin - 1;
 			}
-
 			icol = fcol = radius;
-
 			for (int col = 0; col<resY; col++){
 				if( col <= radius ){
 					icol = col;
@@ -244,7 +230,6 @@ void filteringAnImageExercise()
 
 	//ANOTHER WAY TO COMPUTE THE SAME
 	//AUREL'S WAY (FOR NOOBS)
-
 	/*
 	for (int i = 0; i < iter; i++) {
 
@@ -272,6 +257,8 @@ void filteringAnImageExercise()
 		aux1 = aux2;
 		aux2 = aux3;
 	}*/
+
+
 	aux1->save("BluredImage");
 }
 
@@ -370,8 +357,7 @@ int main()
     //completeSphereClassExercise();
     //raytrace();
 
-    std::cout << "Press a key to exit \n\n" << std::endl;
-	int exit;
-	std::cin >> exit;
+    std::cout << "Press INTRO to exit! \n\n" << std::endl;
+	std::cin;
     return 0;
 }
