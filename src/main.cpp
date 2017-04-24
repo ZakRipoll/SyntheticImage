@@ -225,15 +225,11 @@ void filteringAnImageExercise(bool isGaussian)
 				}
     			for (int x = lin - ilin; x <= (lin + flin); x++){
     				for (int y = col - icol; y <= (col + fcol); y++){
-						if (isGaussian)
-							weigh = gCte * exp((pow(x - lin,2) + pow(y - col,2))/edivisor );
+						if (isGaussian) weigh = gCte * exp((pow(x - lin,2) + pow(y - col,2))/edivisor);
 						pColor += aux1->getPixelValue(x, y) * weigh;
 						avg += weigh;
     				}
     			}
-				if (col == 225) {
-					int r = 1;
-				}
     			pColor /= avg;
     			aux2->setPixelValue(lin, col, pColor);
     			pColor -= pColor;
