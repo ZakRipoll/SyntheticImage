@@ -186,16 +186,23 @@ void filteringAnImageExercise(bool isGaussian)
 
     // Filter-related variables
     // Declare here your filter-related variables
+	int z, w;
 	int iter = 100;
-	int fSize = 3;
+	const int fSize = 9;
 	float avg = 0;
 	int radius = fSize*0.5;
 	int ilin, icol, flin, fcol;
 	float weigh, gCte, edivisor;
+	float gaus[fSize][fSize];
 	weigh = 1.0;
-	if (isGaussian) {
+	if (isGaussian) 
+	{
 		edivisor = 2 * radius * radius;
 		gCte = 1 / ( edivisor * M_PI);
+
+		for (int x = 0; x < fSize; x++)
+			for (int y = 0; y < fSize; y++)
+				gaus[x][y] = gCte * exp((pow(x - radius, 2) + pow(y - radius, 2)) / edivisor);
 	}
 
 	Film * aux1, * aux2,* aux3;
@@ -223,9 +230,13 @@ void filteringAnImageExercise(bool isGaussian)
 				else if( col + radius > resY -1 ){
 					fcol = resY - col -1;
 				}
+				w = -1;
     			for (int x = lin - ilin; x <= (lin + flin); x++){
+					z = -1;
+					w++;
     				for (int y = col - icol; y <= (col + fcol); y++){
-						if (isGaussian) weigh = gCte * exp((pow(x - lin,2) + pow(y - col,2))/edivisor);
+						z++;
+						if (isGaussian) weigh = gaus[w][z];
 						pColor += aux1->getPixelValue(x, y) * weigh;
 						avg += weigh;
     				}
@@ -233,7 +244,7 @@ void filteringAnImageExercise(bool isGaussian)
     			pColor /= avg;
     			aux2->setPixelValue(lin, col, pColor);
     			pColor -= pColor;
-				avg = 0;
+				avg = 0.0;
 			}
 		}
 		aux3 = aux1;
@@ -363,7 +374,7 @@ int main()
     //transformationsExercise();
     //normalTransformExercise();
     //paintingAnImageExercise();
-    filteringAnImageExercise( 0);
+    filteringAnImageExercise(1);
 
     // ASSIGNMENT 2
     //eqSolverExercise(4,0,1);
