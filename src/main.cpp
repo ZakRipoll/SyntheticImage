@@ -3,6 +3,10 @@
 #include <vector>
 #include <algorithm>
 
+#define _USE_MATH_DEFINES
+
+#include <math.h>
+
 #include "core/film.h"
 #include "core/matrix4x4.h"
 #include "core/ray.h"
@@ -162,7 +166,7 @@ void generateSphere(int radius, int centerX, int centerY, Film * f1) {
 	f1->save("original");
 }
 
-void filteringAnImageExercise()
+void filteringAnImageExercise(bool isGaussian)
 {
     // Create two instances of the film class with the same resolution
     int resX, resY;
@@ -174,23 +178,31 @@ void filteringAnImageExercise()
     // Create the original image
     //  Draw a circle centered at centerX, centerY (in pixels, image space)
     //   and with ray r (also in pixels)
-    int centerX = resX / 2;
-    int centerY = resY / 2;
-    int r = std::min(centerX, centerY)/2;
+    int centerX = resX * .5;
+    int centerY = resY * .5;
+    int r = std::min(centerX, centerY) * .5;
 	//Function to generate a sphere in the Film passed by Pointer
 	generateSphere(r,centerX,centerY,&f1);
 
     // Filter-related variables
     // Declare here your filter-related variables
-	int iter =100;
-	int fSize = 9;
-	int avg = 0;
+	int iter = 100;
+	int fSize = 3;
+	float avg = 0;
 	int radius = fSize*0.5;
 	int ilin, icol, flin, fcol;
+	float weigh, gCte, edivisor;
+	weigh = 1.0;
+	if (isGaussian) {
+		edivisor = 2 * radius * radius;
+		gCte = 1 / ( edivisor * M_PI);
+	}
+
 	Film * aux1, * aux2,* aux3;
 	aux1 = &f1;
 	aux2 = &f2;
 	Vector3D pColor = Vector3D();
+	
 
 	//GABRIELA'S and ISAAC'S and WAY
 	for(int i = 0; i < iter;i++){
@@ -213,10 +225,15 @@ void filteringAnImageExercise()
 				}
     			for (int x = lin - ilin; x <= (lin + flin); x++){
     				for (int y = col - icol; y <= (col + fcol); y++){
-    					pColor += aux1->getPixelValue(x, y);
-						avg++;
+						if (isGaussian)
+							weigh = gCte * exp((pow(x - lin,2) + pow(y - col,2))/edivisor );
+						pColor += aux1->getPixelValue(x, y) * weigh;
+						avg += weigh;
     				}
     			}
+				if (col == 225) {
+					int r = 1;
+				}
     			pColor /= avg;
     			aux2->setPixelValue(lin, col, pColor);
     			pColor -= pColor;
@@ -229,7 +246,7 @@ void filteringAnImageExercise()
 	}
 
 	//ANOTHER WAY TO COMPUTE THE SAME
-	//AUREL'S WAY (FOR NOOBS)
+	//AUREL'S WAY
 	/*
 	for (int i = 0; i < iter; i++) {
 
@@ -257,9 +274,9 @@ void filteringAnImageExercise()
 		aux1 = aux2;
 		aux2 = aux3;
 	}*/
-
-
-	aux1->save("BluredImage");
+	
+	if(isGaussian) aux1->save("GaussianBluredImage");
+	else aux1->save("BluredImage");
 }
 
 void completeSphereClassExercise()
@@ -350,7 +367,7 @@ int main()
     //transformationsExercise();
     //normalTransformExercise();
     //paintingAnImageExercise();
-    filteringAnImageExercise();
+    filteringAnImageExercise( 0);
 
     // ASSIGNMENT 2
     //eqSolverExercise(4,0,1);
