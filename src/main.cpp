@@ -210,7 +210,6 @@ void filteringAnImageExercise(bool isGaussian)
 	aux2 = &f2;
 	Vector3D pColor = Vector3D();
 	
-
 	//GABRIELA'S and ISAAC'S and WAY
 	for(int i = 0; i < iter;i++){
 		ilin = icol = flin = fcol = radius;
@@ -286,14 +285,20 @@ void filteringAnImageExercise(bool isGaussian)
 	else aux1->save("BluredImage");
 }
 
+Sphere createSphere() {
+	Matrix4x4 objectToWorld = Matrix4x4();
+	objectToWorld = objectToWorld.translate(Vector3D(0, 0, 3));
+	double sRadius = 1.0;
+	return Sphere(sRadius, objectToWorld);
+}
+
 void completeSphereClassExercise()
 {
     // Make your intersection tests here
     // (....)
-	Matrix4x4 objectToWorld = Matrix4x4();
-	objectToWorld = objectToWorld.translate(Vector3D(0,0,3));
-	double sRadius = 1.0;
-	Sphere sphere = Sphere(sRadius, objectToWorld);
+	
+	Sphere sphere = createSphere();
+
 	std::cout << sphere.toString() << std::endl;
 
 	Ray r1 = Ray(Vector3D(0, 0, 0), Vector3D(0, 0, 1));
@@ -312,8 +317,6 @@ void completeSphereClassExercise()
 	else {
 		std::cout << "El rayo 2 no intersecta" << std::endl;
 	}
-
-
 }
 
 void eqSolverExercise(double A, double B, double C)
@@ -339,13 +342,16 @@ void eqSolverExercise(double A, double B, double C)
     }
 }
 
-void raytrace()
+void raytrace( bool option )
 {
     // Define the film (i.e., image) resolution
     size_t resX, resY;
     resX = 512;
     resY = 512;
     Film film(resX, resY);
+
+	Vector3D color = Vector3D();
+	Sphere sphere = createSphere();
 
     /* ******************* */
     /* Orthographic Camera */
@@ -360,8 +366,24 @@ void raytrace()
     double fovRadians = Utils::degreesToRadians(60);
     PerspectiveCamera camPersp(cameraToWorld, fovRadians, film);
 
-    // Save the final result to file
-    film.save("NoSeQueEs");
+	Camera *camera;
+
+	if (option)
+		camera = &camPersp;
+	else 	
+		camera = &camOrtho;
+
+	for (size_t i = 0; i < resX; i++)
+	{
+		for (size_t j = 0; j < resY; j++)
+		{
+			color.x = sphere.rayIntersectP(camera->generateRay(i, j));
+			film.setPixelValue(i, j, color);
+		}
+
+	}
+
+    film.save( option ? "Perspective Camera" : "Ortographic Camera" );
 }
 
 int main()
@@ -374,12 +396,12 @@ int main()
     //transformationsExercise();
     //normalTransformExercise();
     //paintingAnImageExercise();
-    filteringAnImageExercise(1);
+    //filteringAnImageExercise(1);
 
     // ASSIGNMENT 2
     //eqSolverExercise(4,0,1);
     //completeSphereClassExercise();
-    //raytrace();
+    raytrace(0); //Perspective
 
     std::cout << "Press INTRO to exit! \n\n" << std::endl;
 	std::cin;
