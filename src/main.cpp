@@ -342,7 +342,7 @@ void eqSolverExercise(double A, double B, double C)
     }
 }
 
-void raytrace( bool option )
+void raytrace(bool option )
 {
     // Define the film (i.e., image) resolution
     size_t resX, resY;
@@ -373,11 +373,11 @@ void raytrace( bool option )
 	else 	
 		camera = &camOrtho;
 
-	for (size_t i = 0; i < resX; i++)
+	for (size_t i = 0; i < resX; ++i)
 	{
-		for (size_t j = 0; j < resY; j++)
+		for (size_t j = 0; j < resY; ++j)
 		{
-			color.x = sphere.rayIntersectP(camera->generateRay(i, j));
+			color.x = sphere.rayIntersectP(camera->generateRay((double)i/resX, (double)j/resY));
 			film.setPixelValue(i, j, color);
 		}
 
@@ -401,6 +401,12 @@ int main()
     // ASSIGNMENT 2
     //eqSolverExercise(4,0,1);
     //completeSphereClassExercise();
+	/*
+	enum cam { 
+		Perspective, 
+		Ortographic 
+	};
+	*/
     raytrace(0); //Perspective
 
     std::cout << "Press INTRO to exit! \n\n" << std::endl;

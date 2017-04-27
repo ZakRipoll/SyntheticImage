@@ -17,13 +17,8 @@ bool Sphere::rayIntersectP(const Ray &ray) const
     // Now we need to solve this quadratic equation for t
     EqSolver solver;
     rootValues roots;
-    bool hasRoots = solver.rootQuadEq(A, B, C, roots);
 
-    if(!hasRoots)
-    {
-        return false;
-    }
-    return true;
+    return solver.rootQuadEq(A, B, C, roots);
 }
 
 std::string Sphere::toString() const

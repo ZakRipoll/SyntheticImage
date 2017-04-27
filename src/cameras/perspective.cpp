@@ -34,5 +34,5 @@ Ray PerspectiveCamera::generateRay(const double u, const double v) const
 	rOrig = cameraToWorld.transformPoint(rOrig);
 	rDir = cameraToWorld.transformVector(rDir);
     // Make sure the ray is normalized!
-    return Ray(rOrig.normalized(),rDir.normalized());
+    return Ray(rOrig,rDir.normalized());
 }
