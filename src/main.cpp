@@ -180,7 +180,7 @@ void filteringAnImageExercise(bool isGaussian)
     //   and with ray r (also in pixels)
     int centerX = resX * .5;
     int centerY = resY * .5;
-    int r = std::min(centerX, centerY) * .5;
+    int r = std::min(centerX, centerY)*1.2;
 	//Function to generate a sphere in the Film passed by Pointer
 	generateSphere(r,centerX,centerY,&f1);
 
@@ -359,7 +359,6 @@ void raytrace(bool option )
     Matrix4x4 cameraToWorld; // By default, this gives an ID transform
                              // meaning that the camera space = world space
     OrtographicCamera camOrtho(cameraToWorld, film);
-
     /* ******************* */
     /* Perspective Camera */
     /* ******************* */
@@ -383,7 +382,7 @@ void raytrace(bool option )
 
 	}
 
-    film.save( option ? "Perspective Camera" : "Ortographic Camera" );
+    film.save((option ? "Perspective" : "Ortographic") + (string) " Camera");
 }
 
 int main()
@@ -396,7 +395,7 @@ int main()
     //transformationsExercise();
     //normalTransformExercise();
     //paintingAnImageExercise();
-    //filteringAnImageExercise(1);
+    filteringAnImageExercise(0);
 
     // ASSIGNMENT 2
     //eqSolverExercise(4,0,1);
