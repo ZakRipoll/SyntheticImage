@@ -291,6 +291,16 @@ Sphere createSphere() {
 	return Sphere(sRadius, objectToWorld);
 }
 
+void printColision(bool impact, string number) 
+{
+	std::cout << "El rayo " << number;
+	
+	if (!impact)
+		std::cout << " no";
+
+	std::cout << " intersecta" << std::endl;
+}
+
 void completeSphereClassExercise()
 {
     // Make your intersection tests here
@@ -303,19 +313,8 @@ void completeSphereClassExercise()
 	Ray r1 = Ray(Vector3D(0, 0, 0), Vector3D(0, 0, 1));
 	Ray r2 = Ray(Vector3D(0, 0, 0), Vector3D(0, 1, 0));
 
-	if (sphere.rayIntersectP(r1)) {
-		std::cout << "El rayo 1 intersecta" << std::endl;
-	}
-	else {
-		std::cout << "El rayo 1 no intersecta" << std::endl;
-	}
-
-	if (sphere.rayIntersectP(r2)) {
-		std::cout << "El rayo 2 intersecta" << std::endl;
-	}
-	else {
-		std::cout << "El rayo 2 no intersecta" << std::endl;
-	}
+	printColision(sphere.rayIntersectP(r1), "1");
+	printColision(sphere.rayIntersectP(r2), "2");
 }
 
 void eqSolverExercise(double A, double B, double C)
