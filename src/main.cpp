@@ -281,8 +281,7 @@ void filteringAnImageExercise(bool isGaussian)
 		aux2 = aux3;
 	}*/
 	
-	if(isGaussian) aux1->save("GaussianBluredImage");
-	else aux1->save("BluredImage");
+	aux1->save((isGaussian) ? "GaussianBluredImage" : "BluredImage");
 }
 
 Sphere createSphere() {
@@ -373,14 +372,11 @@ void raytrace(bool option )
 		camera = &camOrtho;
 
 	for (size_t i = 0; i < resX; ++i)
-	{
 		for (size_t j = 0; j < resY; ++j)
 		{
-			color.x = sphere.rayIntersectP(camera->generateRay((double)i/resX, (double)j/resY));
+			color.x = sphere.rayIntersectP(camera->generateRay( (i+.5)/resX, (j+.5)/resY));
 			film.setPixelValue(i, j, color);
 		}
-
-	}
 
     film.save((option ? "Perspective" : "Ortographic") + (string) " Camera");
 }
@@ -395,18 +391,18 @@ int main()
     //transformationsExercise();
     //normalTransformExercise();
     //paintingAnImageExercise();
-    filteringAnImageExercise(0);
+    //filteringAnImageExercise(0);
 
     // ASSIGNMENT 2
     //eqSolverExercise(4,0,1);
-    //completeSphereClassExercise();
+    completeSphereClassExercise();
 	/*
 	enum cam { 
 		Perspective, 
 		Ortographic 
 	};
 	*/
-    raytrace(0); //Perspective
+    raytrace(!0); //Perspective
 
     std::cout << "Press INTRO to exit! \n\n" << std::endl;
 	std::cin;
