@@ -1,5 +1,0 @@
-On branch Practica3
-Untracked files:
-	init.txt
-
-nothing added to commit but untracked files present

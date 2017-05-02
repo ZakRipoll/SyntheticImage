@@ -1,9 +1,0 @@
-﻿1>------ Operación Compilar iniciada: proyecto: RTIS, configuración: Debug x64 ------
-1>  main.cpp
-1>c:\users\aurel\documents\syntheticimage\src\main.cpp(196): warning C4101: 'B': variable local sin referencia
-1>c:\users\aurel\documents\syntheticimage\src\main.cpp(194): warning C4101: 'roots': variable local sin referencia
-1>c:\users\aurel\documents\syntheticimage\src\main.cpp(196): warning C4101: 'A': variable local sin referencia
-1>c:\users\aurel\documents\syntheticimage\src\main.cpp(196): warning C4101: 'C': variable local sin referencia
-1>  RTIS.vcxproj -> C:\Users\aurel\Documents\SyntheticImage\VisualStudio2015\x64\Debug\RTIS.exe
-1>  RTIS.vcxproj -> C:\Users\aurel\Documents\SyntheticImage\VisualStudio2015\x64\Debug\RTIS.pdb (Partial PDB)
-========== Compilar: 1 correctos, 0 incorrectos, 0 actualizados, 0 omitidos ==========
