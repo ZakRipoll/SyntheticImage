@@ -180,14 +180,14 @@ void filteringAnImageExercise(bool isGaussian)
     //   and with ray r (also in pixels)
     int centerX = resX * .5;
     int centerY = resY * .5;
-    int r = std::min(centerX, centerY)*1.2;
+    int r = std::min(centerX, centerY)*.5;
 	//Function to generate a sphere in the Film passed by Pointer
 	generateSphere(r,centerX,centerY,&f1);
 
     // Filter-related variables
     // Declare here your filter-related variables
 	int z, w;
-	int iter = 100;
+	int iter = 20;
 	const int fSize = 9;
 	float avg = 0;
 	int radius = fSize*0.5;
@@ -195,6 +195,7 @@ void filteringAnImageExercise(bool isGaussian)
 	float weigh, gCte, edivisor;
 	float gaus[fSize][fSize];
 	weigh = 1.0;
+
 	if (isGaussian) 
 	{
 		edivisor = 2 * radius * radius;
@@ -251,36 +252,6 @@ void filteringAnImageExercise(bool isGaussian)
 		aux2 = aux3;
 	}
 
-	//ANOTHER WAY TO COMPUTE THE SAME
-	//AUREL'S WAY
-	/*
-	for (int i = 0; i < iter; i++) {
-
-		for (int lin = 0; lin<resX; lin++) {
-
-			for (int col = 0; col<resY; col++) {
-
-				for (int x = lin - radius; x <= lin + radius; x++) {
-
-					for (int y = col - radius; y <= col + radius; y++) {
-
-						if (x<0 || x>resX - 1 || y<0 || y>resY-1) { continue; }
-								
-						pColor += aux1->getPixelValue(x, y);
-						avg++;
-					}
-				}
-				pColor /= avg;
-				avg = 0;
-				aux2->setPixelValue(lin, col, pColor);
-				pColor -= pColor;
-			}
-		}
-		aux3 = aux1;
-		aux1 = aux2;
-		aux2 = aux3;
-	}*/
-	
 	aux1->save((isGaussian) ? "GaussianBluredImage" : "BluredImage");
 }
 
@@ -390,20 +361,12 @@ int main()
     //transformationsExercise();
     //normalTransformExercise();
     //paintingAnImageExercise();
-    //filteringAnImageExercise(0);
+    filteringAnImageExercise(0);
 
     // ASSIGNMENT 2
     //eqSolverExercise(4,0,1);
-    completeSphereClassExercise();
-	/*
-	enum cam { 
-		Perspective, 
-		Ortographic 
-	};
-	*/
-    raytrace(0); //Perspective
+    //completeSphereClassExercise();
+    //raytrace(0); //Perspective
 
-    std::cout << "Press INTRO to exit! \n\n" << std::endl;
-	std::cin;
     return 0;
 }
