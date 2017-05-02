@@ -373,7 +373,7 @@ void raytrace(bool option )
 	for (size_t i = 0; i < resX; ++i)
 		for (size_t j = 0; j < resY; ++j)
 		{
-			color.x = sphere.rayIntersectP(camera->generateRay( (i+.5)/resX, (j+.5)/resY));
+			color.x = sphere.rayIntersectP(camera->generateRay((i+.5)/resX, (j+.5)/resY));
 			film.setPixelValue(i, j, color);
 		}
 
@@ -401,7 +401,7 @@ int main()
 		Ortographic 
 	};
 	*/
-    raytrace(!0); //Perspective
+    raytrace(0); //Perspective
 
     std::cout << "Press INTRO to exit! \n\n" << std::endl;
 	std::cin;
