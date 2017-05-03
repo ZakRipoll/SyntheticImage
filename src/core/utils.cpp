@@ -15,37 +15,31 @@ Vector3D Utils::multiplyPerCanal(const Vector3D &v1, const Vector3D &v2)
 
 bool Utils::hasIntersection(const Ray &ray, const std::vector<Shape*> &objectsList)
 {
-    //std::cout << "Need to implement the function Utils::hasIntersection() in the file utils.cpp" << std::endl;
-
-    // Write your code bellow
-    // (...)
-    //
-    // for each object on the scene...
     for(size_t objindex = 0; objindex < objectsList.size(); objindex ++)
     {
-          // get the current object
-          const Shape *obj = objectsList.at(objindex);
-          //(...)
+		const Shape *obj = objectsList.at(objindex);
 
-		  if (obj->rayIntersectP(ray)) return true;
+		 if (obj->rayIntersectP(ray)) return true;
     }
-    //
-    // (...)
-    //
 
     return false;
 }
 
 bool Utils::getClosestIntersection(const Ray &cameraRay, const std::vector<Shape*> &objectsList, Intersection &its)
 {
-    std::cout << "Need to implement the function Utils::getClosestIntersection() in the file utils.cpp" << std::endl;
+	double min = cameraRay.minT;
+	 
+	for (size_t objindex = 0; objindex < objectsList.size(); objindex++)
+	{
+		const Shape *obj = objectsList.at(objindex);
 
-    //
-    // Write your code bellow
-    //
-    // (...)
-    //
-
+		if (obj->rayIntersectP(cameraRay)) {
+			if (cameraRay.minT < min) {
+				min = cameraRay.minT;
+				its.itsPoint;
+			}
+		}
+	}
     return false;
 }
 
