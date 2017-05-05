@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <stdlib.h> /* srand, rand */
 #include <vector>
 #include <algorithm>
@@ -14,6 +14,7 @@
 #include "cameras/perspective.h"
 
 #include "shaders/intersectionshader.h"
+#include "shaders/depthshader.h"
 
 void buildSceneSphere(Camera* &cam, Film* &film,
                       std::vector<Shape*>* &objectsList,
@@ -126,7 +127,12 @@ int main()
     // Declare the shader
     Vector3D bgColor(0.0, 0.0, 0.0); // Background color (for rays which do not intersect anything)
     Vector3D intersectionColor(1,0,0);
-    Shader *shader = new IntersectionShader (intersectionColor, bgColor);
+	Shader *shader;
+	
+	if(0)
+		shader = new IntersectionShader (intersectionColor, bgColor);
+	else 
+		shader = new DepthShader(Vector3D(.4, 1, .4), 8, bgColor);
 
     // Declare pointers to all the variables which describe the scene
     Camera *cam;
