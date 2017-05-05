@@ -1,9 +1,9 @@
 #include "phong.h"
 
-// Implement the Constructors here
-//
-// (...)
-//
+#include <iostream>
+
+Phong::Phong()
+{ }
 
 bool Phong::hasSpecular() const
 {
@@ -21,7 +21,12 @@ bool Phong::hasDiffuseOrGlossy() const
 	return true;
 }
 
-// Implement the function "getReflectance" here
-//
-// (...)
-//
+double Phong::getIndexOfRefraction() const
+{
+	// Implement the function "getReflectance" here
+	//
+	// (...)
+	//
+
+	return 0.0;
+}
