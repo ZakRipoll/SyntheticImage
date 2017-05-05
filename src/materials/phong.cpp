@@ -30,3 +30,8 @@ double Phong::getIndexOfRefraction() const
 
 	return 0.0;
 }
+
+Vector3D Phong::getReflectance(const Vector3D &n, const Vector3D &wo, const Vector3D &wi) const
+{
+
+}
