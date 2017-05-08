@@ -8,12 +8,5 @@ Vector3D DepthShader::computeColor(const Ray & r, const std::vector<Shape*>& obj
 {
 	Intersection its;
 
-	if (Utils::getClosestIntersection(r, objList, its))
-	{
-		return color * (1.0 - r.maxT/maxDist);
-	}
-	else
-	{
-		return bgColor;
-	}
+	return Utils::getClosestIntersection(r, objList, its) ? color * (1.0 - r.maxT / maxDist) : bgColor;
 }
