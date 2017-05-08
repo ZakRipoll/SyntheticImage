@@ -99,6 +99,9 @@
     <ClCompile Include="..\..\src\shaders\depthshader.cpp">
       <Filter>src\shaders</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\materials\phong.cpp">
+      <Filter>src\materials</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\cameras\camera.h">
@@ -160,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\shapes\sphere.h">
       <Filter>src\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\materials\phong.h">
+      <Filter>src\materials</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
