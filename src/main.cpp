@@ -16,6 +16,8 @@
 #include "shaders/intersectionshader.h"
 #include "shaders/depthshader.h"
 
+#include "materials\phong.h"
+
 void buildSceneSphere(Camera* &cam, Film* &film,
                       std::vector<Shape*>* &objectsList,
                       std::vector<PointLightSource>* &lightSourceList)
@@ -34,9 +36,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     /* ************************** */
     /* DEFINE YOUR MATERIALS HERE */
     /* ************************** */
-    // (...)
-    //  EXAMPLE:  Material *green_50 = new Phong (Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
-
+    //Material *green_50 = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
 
     /* ******* */
     /* Objects */
@@ -53,7 +53,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     // Define and place a sphere
     Matrix4x4 sphereTransform2;
     sphereTransform2 = sphereTransform2.translate(Vector3D(1.0, 0.0, 6));
-    Shape *s2 = new Sphere (1, sphereTransform2, NULL);
+    Shape *s2 = new Sphere (2, sphereTransform2, NULL);
 
     // Define and place a sphere
     Matrix4x4 sphereTransform3;
@@ -65,17 +65,15 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     objectsList->push_back(s2);
     objectsList->push_back(s3);
 
-
     /* ****** */
     /* Lights */
     /* ****** */
-    //
-    // ADD YOUR LIGHT SOURCES HERE
-    // (...)
-    //
-    // DO NOT FORGET TO STORE THE LIGHT SOURCES IN THE "lightSourceList"
-    // (...)
-    //
+
+	lightSourceList = new std::vector<PointLightSource>;
+
+	PointLightSource red(Vector3D(1), Vector3D(1, 0, 0));
+
+	lightSourceList->push_back(red);
 }
 
 void raytrace(Camera* &cam, Shader* &shader, Film* &film,
@@ -129,8 +127,8 @@ int main()
     Vector3D intersectionColor(1,0,0);
 	Shader *shader;
 	
-	if(0)
-		shader = new IntersectionShader (intersectionColor, bgColor);
+	if(!0)
+		shader = new IntersectionShader(intersectionColor, bgColor);
 	else 
 		shader = new DepthShader(Vector3D(.4, 1, .4), 8, bgColor);
 
