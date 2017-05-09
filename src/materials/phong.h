@@ -18,6 +18,11 @@ public:
 	virtual bool hasTransmission() const;
 	virtual bool hasDiffuseOrGlossy() const;
 	virtual double getIndexOfRefraction() const;
+
+private:
+	Vector3D diffuse;
+	Vector3D specular;
+	int shininess;
 };
 
 #endif //PHONG

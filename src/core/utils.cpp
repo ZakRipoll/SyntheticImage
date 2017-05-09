@@ -33,10 +33,7 @@ bool Utils::getClosestIntersection(const Ray &cameraRay, const std::vector<Shape
 	{
 		const Shape *obj = objectsList.at(objindex);
 
-		if (obj->rayIntersect(cameraRay, its) && !colision)
-		{
-			colision = true;
-		}
+		colision |= obj->rayIntersect(cameraRay, its);
 	}
     return colision;
 }

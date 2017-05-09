@@ -36,7 +36,10 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     /* ************************** */
     /* DEFINE YOUR MATERIALS HERE */
     /* ************************** */
-    //Material *green_50 = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
+    Material *green_50 = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
+	Material *purple_50 = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
+	Material *pink_50 = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
+
 
     /* ******* */
     /* Objects */
@@ -48,17 +51,17 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     // Define and place a sphere
     Matrix4x4 sphereTransform1;
     sphereTransform1 = sphereTransform1.translate(Vector3D(-1.0, -0.5, 2*std::sqrt(2.0)));
-    Shape *s1 = new Sphere (0.25, sphereTransform1, NULL);
+    Shape *s1 = new Sphere (0.25, sphereTransform1, green_50);
 
     // Define and place a sphere
     Matrix4x4 sphereTransform2;
     sphereTransform2 = sphereTransform2.translate(Vector3D(1.0, 0.0, 6));
-    Shape *s2 = new Sphere (2, sphereTransform2, NULL);
+    Shape *s2 = new Sphere (1, sphereTransform2, purple_50);
 
     // Define and place a sphere
     Matrix4x4 sphereTransform3;
     sphereTransform3 = sphereTransform3.translate(Vector3D(0.3, -0.75, 3.5));
-    Shape *s3 = new Sphere (0.25, sphereTransform3, NULL);
+    Shape *s3 = new Sphere (0.25, sphereTransform3, pink_50);
 
     // Store the objects in the object list
     objectsList->push_back(s1);
@@ -71,7 +74,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 
 	lightSourceList = new std::vector<PointLightSource>;
 
-	PointLightSource red(Vector3D(1), Vector3D(1, 0, 0));
+	PointLightSource red(Vector3D(1), Vector3D(1));
 
 	lightSourceList->push_back(red);
 }
@@ -127,7 +130,7 @@ int main()
     Vector3D intersectionColor(1,0,0);
 	Shader *shader;
 	
-	if(!0)
+	if(0)
 		shader = new IntersectionShader(intersectionColor, bgColor);
 	else 
 		shader = new DepthShader(Vector3D(.4, 1, .4), 8, bgColor);
