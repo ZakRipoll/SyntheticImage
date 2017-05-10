@@ -15,6 +15,7 @@
 
 #include "shaders/intersectionshader.h"
 #include "shaders/depthshader.h"
+#include "shaders/directshader.h"
 
 #include "materials\phong.h"
 
@@ -39,7 +40,6 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     Material *green_50 = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
 	Material *purple_50 = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
 	Material *pink_50 = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
-
 
     /* ******* */
     /* Objects */
@@ -74,9 +74,14 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 
 	lightSourceList = new std::vector<PointLightSource>;
 
-	PointLightSource red(Vector3D(1), Vector3D(1));
+	PointLightSource red(Vector3D(1, 0, 1), Vector3D(10));
+	PointLightSource verd(Vector3D(1, 1, 1), Vector3D(10));
+	PointLightSource blau(Vector3D(0, 1, 1), Vector3D(10));
+
 
 	lightSourceList->push_back(red);
+	lightSourceList->push_back(verd);
+	lightSourceList->push_back(blau);
 }
 
 void raytrace(Camera* &cam, Shader* &shader, Film* &film,
@@ -130,10 +135,12 @@ int main()
     Vector3D intersectionColor(1,0,0);
 	Shader *shader;
 	
-	if(0)
+	if(0&&0)
 		shader = new IntersectionShader(intersectionColor, bgColor);
-	else 
+	else if(0&&1)
 		shader = new DepthShader(Vector3D(.4, 1, .4), 8, bgColor);
+	else
+		shader = new DirectShader(bgColor);
 
     // Declare pointers to all the variables which describe the scene
     Camera *cam;

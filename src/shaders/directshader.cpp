@@ -5,7 +5,7 @@ DirectShader::DirectShader()
 {
 }
 
-DirectShader::DirectShader(Vector3D hitColor, Vector3D bgColor_)
+DirectShader::DirectShader(Vector3D bgColor_) : bgColor(bgColor_)
 {
 }
 
@@ -13,19 +13,24 @@ Vector3D DirectShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 {
 	Intersection its;
 
-	if (!Utils::getClosestIntersection(r, objList, its))
-		return bgColor_;
+	Vector3D color;
 
-	Ray wo(its.itsPoint, abs(its.itsPoint - r.o));
+	if (!Utils::getClosestIntersection(r, objList, its)) return bgColor;
+
+	Vector3D wo = -r.d;
 
 	for (int i = 0; i < lsList.size(); i++) 
 	{
-		Ray wi (its.itsPoint, abs(its.itsPoint - lsList[i].getPosition));
+		Vector3D direction (its.itsPoint - lsList[i].getPosition());
+
+		direction.absolut();
+
+		Ray wi (its.itsPoint, direction);
 
 		if (Utils::hasIntersection(wi, objList) || dot(its.normal, wi.d) < 0) continue;
 
-
+		color += Utils::multiplyPerCanal(its.shape->getMaterial().getReflectance(its.normal, wo, wi.d), lsList[i].getIntensity(its.itsPoint));
 	}
 
-	return Vector3D();
+	return color;
 }
