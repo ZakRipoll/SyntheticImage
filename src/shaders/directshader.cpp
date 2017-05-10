@@ -23,7 +23,7 @@ Vector3D DirectShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 	{
 		Vector3D direction (its.itsPoint - lsList[i].getPosition());
 
-		direction.absolut();
+		//direction.absolut();
 
 		Ray wi (its.itsPoint, direction);
 

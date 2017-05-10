@@ -38,8 +38,8 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     /* DEFINE YOUR MATERIALS HERE */
     /* ************************** */
     Material *green_50 = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
-	Material *purple_50 = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
-	Material *pink_50 = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
+	Material *purple_50 = new Phong(Vector3D(1, .1, .1), Vector3D(0.2, 0.6, 0.2), 50);
+	Material *pink_50 = new Phong(Vector3D(0, 0, 1), Vector3D(0.2, 0.6, 0.2), 50);
 
     /* ******* */
     /* Objects */
@@ -74,10 +74,9 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 
 	lightSourceList = new std::vector<PointLightSource>;
 
-	PointLightSource red(Vector3D(1, 0, 1), Vector3D(10));
-	PointLightSource verd(Vector3D(1, 1, 1), Vector3D(10));
-	PointLightSource blau(Vector3D(0, 1, 1), Vector3D(10));
-
+	PointLightSource red(Vector3D(0, 0, 10), Vector3D(60));
+	PointLightSource verd(Vector3D(0, -10, 0), Vector3D(60));
+	PointLightSource blau(Vector3D(10, 0, 0), Vector3D(1000));
 
 	lightSourceList->push_back(red);
 	lightSourceList->push_back(verd);
