@@ -134,9 +134,9 @@ int main()
     Vector3D intersectionColor(1,0,0);
 	Shader *shader;
 	
-	if(0&&0)
+	if(0)
 		shader = new IntersectionShader(intersectionColor, bgColor);
-	else if(0&&1)
+	else if(0)
 		shader = new DepthShader(Vector3D(.4, 1, .4), 8, bgColor);
 	else
 		shader = new DirectShader(bgColor);
