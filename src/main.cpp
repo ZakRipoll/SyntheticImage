@@ -37,9 +37,9 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     /* ************************** */
     /* DEFINE YOUR MATERIALS HERE */
     /* ************************** */
-    Material *green_50 = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0.2, 0.6, 0.2), 50);
-	Material *purple_50 = new Phong(Vector3D(1, .1, .1), Vector3D(0.2, 0.6, 0.2), 50);
-	Material *pink_50 = new Phong(Vector3D(0, 0, 1), Vector3D(0.2, 0.6, 0.2), 50);
+    Material *green_50 = new Phong(Vector3D(0.2, 0.7, 0.3), 50);
+	Material *purple_100 = new Phong(Vector3D(.305, .062, .698), 100);
+	Material *pink_50 = new Phong(Vector3D(.976, .062, .843), 50);
 
     /* ******* */
     /* Objects */
@@ -56,7 +56,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     // Define and place a sphere
     Matrix4x4 sphereTransform2;
     sphereTransform2 = sphereTransform2.translate(Vector3D(1.0, 0.0, 6));
-    Shape *s2 = new Sphere (1, sphereTransform2, purple_50);
+    Shape *s2 = new Sphere (1, sphereTransform2, purple_100);
 
     // Define and place a sphere
     Matrix4x4 sphereTransform3;
@@ -74,13 +74,13 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 
 	lightSourceList = new std::vector<PointLightSource>;
 
-	PointLightSource red(Vector3D(0, 0, 10), Vector3D(60));
-	PointLightSource verd(Vector3D(0, -10, 0), Vector3D(60));
-	PointLightSource blau(Vector3D(10, 0, 0), Vector3D(1000));
+	PointLightSource front(Vector3D(0, 0, 10), Vector3D(60));
+	PointLightSource top(Vector3D(0, -10, 0), Vector3D(60));
+	PointLightSource right(-Vector3D(10, 0, 0), Vector3D(60));
 
-	lightSourceList->push_back(red);
-	lightSourceList->push_back(verd);
-	lightSourceList->push_back(blau);
+	lightSourceList->push_back(front);
+	lightSourceList->push_back(top);
+	lightSourceList->push_back(right);
 }
 
 void raytrace(Camera* &cam, Shader* &shader, Film* &film,

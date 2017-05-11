@@ -10,6 +10,7 @@ class Phong : public Material
 public:
 	Phong();
 	Phong(Vector3D, Vector3D, int);
+	Phong::Phong(Vector3D, int);
 
 	virtual Vector3D getReflectance(const Vector3D &n, const Vector3D &wo,
 		const Vector3D &wi) const;

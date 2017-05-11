@@ -10,6 +10,10 @@ Phong::Phong(Vector3D diffuse_, Vector3D specular_, int shininess_) : diffuse(di
 {
 }
 
+Phong::Phong(Vector3D diffuse_, int shininess_) : diffuse(diffuse_), specular(Vector3D(1) - diffuse_), shininess(shininess_)
+{
+}
+
 bool Phong::hasSpecular() const
 {
 	// This material does not have specular component
