@@ -26,7 +26,7 @@ bool InfinitePlane::rayIntersectP(const Ray &rayWorld) const
 
     // Is tHit outside the bounds of the ray segment we want to test intersecion with?
     if (tHit < rayWorld.minT || tHit > rayWorld.maxT)
-        return false;
+       return false;
 
     // Arriving here, we know that the ray segment intersects the plan
     return true;

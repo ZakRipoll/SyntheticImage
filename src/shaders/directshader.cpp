@@ -13,9 +13,9 @@ Vector3D DirectShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 {
 	Intersection its;
 
-	Vector3D color;
-
 	if (!Utils::getClosestIntersection(r, objList, its)) return bgColor;
+
+	Vector3D color;
 
 	Vector3D wo = -r.d;
 
