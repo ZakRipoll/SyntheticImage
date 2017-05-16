@@ -14,7 +14,7 @@ Vector3D InfinitePlane::getNormalWorld() const
 bool InfinitePlane::rayIntersectP(const Ray &rayWorld) const
 {
     // Compute the denominator of the tHit formula
-    // (..)
+	double denominator = dot(rayWorld.d, nWorld);
 
     // If the denominator is very close to zero, then the ray and the
     // plane are almost parallel
@@ -22,7 +22,7 @@ bool InfinitePlane::rayIntersectP(const Ray &rayWorld) const
         return false;
 
     // Effectivelly compute the intersection point
-    //(...)
+	double tHit = dot( (p0World - rayWorld.o), nWorld ) / denominator;
 
     // Is tHit outside the bounds of the ray segment we want to test intersecion with?
     if (tHit < rayWorld.minT || tHit > rayWorld.maxT)
@@ -35,31 +35,32 @@ bool InfinitePlane::rayIntersectP(const Ray &rayWorld) const
 bool InfinitePlane::rayIntersect(const Ray &rayWorld, Intersection &its) const
 {
     // Compute the denominator of the tHit formula
-    // (..)
+	double denominator = dot(rayWorld.d, nWorld);
 
     // Test for parallel ray/plane
-    // (..)
+	if (std::abs(denominator) < Epsilon)
+		return false;
 
     // Effectivelly compute the intersection distance
-    //(...)
+	double tHit = dot((p0World - rayWorld.o), nWorld) / denominator;
 
     // Is tHit outside the bounds of the ray segment we want to test intersecion with?
-    // (..)
+	if (tHit < rayWorld.minT || tHit > rayWorld.maxT)
+		return false;
 
     // Compute ray/plane the intersection point
-    // (..)
+	Vector3D phit = rayWorld.o + rayWorld.d * tHit;
 
     // Fill the intersection details
-    //(...)
+	its.itsPoint = phit;
+	its.normal = nWorld;
+	its.shape = this;
 
     // Update the ray maxT
-    // (...)
+	rayWorld.maxT = tHit;
 
     return true;
 }
-
-
-
 
 std::string InfinitePlane::toString() const
 {

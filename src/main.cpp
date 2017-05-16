@@ -9,6 +9,7 @@
 #include "core/utils.h"
 
 #include "shapes/sphere.h"
+#include "shapes/infiniteplane.h"
 
 #include "cameras/ortographic.h"
 #include "cameras/perspective.h"
@@ -40,8 +41,8 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     Material *green_50 = new Phong(Vector3D(0.2, 0.7, 0.3), 50);
 	Material *purple_100 = new Phong(Vector3D(.305, .062, .698), 100);
 	Material *pink_50 = new Phong(Vector3D(.976, .062, .843), 50);
-
-    /* ******* */
+    
+	/* ******* */
     /* Objects */
     /* ******* */
     // Create a heterogeneous list of objects of type shape
@@ -62,11 +63,20 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     Matrix4x4 sphereTransform3;
     sphereTransform3 = sphereTransform3.translate(Vector3D(0.3, -0.75, 3.5));
     Shape *s3 = new Sphere (0.25, sphereTransform3, pink_50);
-
+	
     // Store the objects in the object list
     objectsList->push_back(s1);
     objectsList->push_back(s2);
     objectsList->push_back(s3);
+
+	// Infinite Plane
+	if (0) {
+		Material *greyDiffuse = new Phong(Vector3D(0.8, 0.8, 0.8), Vector3D(0, 0, 0), 100);
+		double offset = 3.0;
+		Shape *bottomPlane = new InfinitePlane(Vector3D(0, -offset, 0), Vector3D(0, 1, 0), greyDiffuse);
+		objectsList->push_back(bottomPlane);
+	}
+	
 
     /* ****** */
     /* Lights */
@@ -82,6 +92,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 	lightSourceList->push_back(top);
 	lightSourceList->push_back(right);
 }
+
 
 void raytrace(Camera* &cam, Shader* &shader, Film* &film,
               std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
@@ -147,7 +158,8 @@ int main()
     std::vector<PointLightSource> *lightSourceList;
 
     // Build the scene
-    buildSceneSphere(cam, film, objectsList, lightSourceList);
+	if(!0)
+		buildSceneSphere(cam, film, objectsList, lightSourceList);
 
     // Launch some rays!
     raytrace(cam, shader, film, objectsList, lightSourceList);
