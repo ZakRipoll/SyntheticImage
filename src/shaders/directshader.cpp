@@ -21,13 +21,17 @@ Vector3D DirectShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 
 	for (int i = 0; i < lsList.size(); i++) 
 	{
-		Vector3D direction (its.itsPoint - lsList[i].getPosition());
+		Vector3D direction (lsList[i].getPosition() - its.itsPoint );
+		float distanceLS = direction.length();
+		Vector3D wi = direction.normalized();
 
-		Ray wi (its.itsPoint, direction);
+		Ray shadowRay(its.itsPoint, wi);
+		shadowRay.maxT = distanceLS;
 
-		if (Utils::hasIntersection(wi, objList) || dot(its.normal, wi.d) < 0) continue;
-
-		color += Utils::multiplyPerCanal(its.shape->getMaterial().getReflectance(its.normal, wo, wi.d), lsList[i].getIntensity(its.itsPoint));
+		if (!Utils::hasIntersection(shadowRay, objList) && dot(its.normal, wi) > 0) {
+			color += Utils::multiplyPerCanal(its.shape->getMaterial().getReflectance(its.normal, wo, wi),
+				lsList[i].getIntensity(its.itsPoint));
+		}
 	}
 
 	return color;

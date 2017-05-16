@@ -42,7 +42,7 @@ bool InfinitePlane::rayIntersect(const Ray &rayWorld, Intersection &its) const
 		return false;
 
     // Effectivelly compute the intersection distance
-	double tHit = dot((p0World - rayWorld.o), nWorld) / denominator;
+	double tHit = dot(p0World - rayWorld.o, nWorld) / denominator;
 
     // Is tHit outside the bounds of the ray segment we want to test intersecion with?
 	if (tHit < rayWorld.minT || tHit > rayWorld.maxT)

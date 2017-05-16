@@ -70,7 +70,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     objectsList->push_back(s3);
 
 	// Infinite Plane
-	if (0) {
+	if (!0) {
 		Material *greyDiffuse = new Phong(Vector3D(0.8, 0.8, 0.8), Vector3D(0, 0, 0), 100);
 		double offset = 3.0;
 		Shape *bottomPlane = new InfinitePlane(Vector3D(0, -offset, 0), Vector3D(0, 1, 0), greyDiffuse);
@@ -84,9 +84,9 @@ void buildSceneSphere(Camera* &cam, Film* &film,
 
 	lightSourceList = new std::vector<PointLightSource>;
 
-	PointLightSource front(Vector3D(0, 0, 10), Vector3D(60));
-	PointLightSource top(Vector3D(0, -10, 0), Vector3D(60));
-	PointLightSource right(-Vector3D(10, 0, 0), Vector3D(60));
+	PointLightSource front(Vector3D(0, 0, -10), Vector3D(60));
+	PointLightSource top(Vector3D(0, 10, 0), Vector3D(60));
+	PointLightSource right(-Vector3D(-10, 0, 0), Vector3D(60));
 
 	lightSourceList->push_back(front);
 	lightSourceList->push_back(top);
