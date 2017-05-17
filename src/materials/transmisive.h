@@ -8,15 +8,17 @@ class Transmisive : public  Material
 {
 	public:
 		Transmisive();
-		Transmisive(Vector3D spec);
+		Transmisive(double, Vector3D spec);
 
 		 virtual Vector3D getReflectance(const Vector3D &n, const Vector3D &wo,const Vector3D &wi) const;
 		 virtual bool hasSpecular() const;
 		 virtual bool hasTransmission() const;
 		 virtual bool hasDiffuseOrGlossy() const;
 		 virtual double getIndexOfRefraction() const;
+		 double getEta();
 
 	private:
+		double eta;
 		Vector3D specular;
 };
 

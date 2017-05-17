@@ -1,5 +1,6 @@
 #include "directshader.h"
 #include "../core/utils.h"
+#include "../materials/transmisive.h"
 
 DirectShader::DirectShader()
 {
@@ -9,7 +10,8 @@ DirectShader::DirectShader(Vector3D bgColor_) : bgColor(bgColor_)
 {
 }
 
-Vector3D DirectShader::computeColor(const Ray & r, const std::vector<Shape*>& objList, const std::vector<PointLightSource>& lsList) const
+Vector3D DirectShader::computeColor(const Ray & r, const std::vector<Shape*>& objList, 
+	const std::vector<PointLightSource>& lsList) const
 {
 	Intersection its;
 
@@ -20,10 +22,29 @@ Vector3D DirectShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 	Vector3D wo = -r.d;
 
 	if (its.shape->getMaterial().hasSpecular()) {
-		Vector3D wr = Utils::computeReflectionDirection(wo,its.normal);
+		Vector3D wr = Utils::computeReflectionDirection(r.d,its.normal);
 			//its.shape->getMaterial().getReflectance(its.normal, wo, NULL);
 		Ray refRay = Ray(its.itsPoint, wr, r.depth + 1);
 		return computeColor(refRay, objList, lsList);
+	}
+
+	if (its.shape->getMaterial().hasTransmission()) {
+		double eta, cosThetaI, cosThetaT_out = 0;
+		Transmisive *t = (Transmisive *) &its.shape->getMaterial();
+		eta = t->getEta();
+		cosThetaI = dot(its.normal, r.d);
+		if (!Utils::isTotalInternalReflection(eta, cosThetaI, cosThetaT_out)) {
+			Vector3D wr = Utils::computeTransmissionDirection(r, its.normal, eta, cosThetaI, 
+																cosThetaT_out);
+			Ray refRay = Ray(its.itsPoint, wr, r.depth + 1);
+			return computeColor(refRay, objList, lsList);
+		}
+		else {
+			Vector3D wr = Utils::computeReflectionDirection(r.d, its.normal);
+			//its.shape->getMaterial().getReflectance(its.normal, wo, NULL);
+			Ray refRay = Ray(its.itsPoint, wr, r.depth + 1);
+			return computeColor(refRay, objList, lsList);
+		}
 	}
 
 	for (int i = 0; i < lsList.size(); i++) 

@@ -2,9 +2,8 @@
 
 Transmisive::Transmisive() {}
 
-Transmisive::Transmisive( Vector3D spec)
+Transmisive::Transmisive(double eta_, Vector3D spec) : eta(eta_), specular(spec)
 {
-	specular = spec;
 }
 
 Vector3D Transmisive::getReflectance(const Vector3D & n, const Vector3D & wo, const Vector3D & wi) const
@@ -14,12 +13,12 @@ Vector3D Transmisive::getReflectance(const Vector3D & n, const Vector3D & wo, co
 
 bool Transmisive::hasSpecular() const
 {
-	return true;
+	return false;
 }
 
 bool Transmisive::hasTransmission() const
 {
-	return false;
+	return true;
 }
 
 bool Transmisive::hasDiffuseOrGlossy() const
@@ -30,4 +29,9 @@ bool Transmisive::hasDiffuseOrGlossy() const
 double Transmisive::getIndexOfRefraction() const
 {
 	return 0.0;
+}
+
+double Transmisive::getEta()
+{
+	return eta;
 }
