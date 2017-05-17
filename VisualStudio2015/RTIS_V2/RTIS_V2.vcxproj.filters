@@ -111,6 +111,9 @@
     <ClCompile Include="..\..\src\materials\mirror.cpp">
       <Filter>src\materials</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\materials\transmisive.cpp">
+      <Filter>src\materials</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\cameras\camera.h">
@@ -183,6 +186,9 @@
       <Filter>src\shapes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\materials\mirror.h">
+      <Filter>src\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\materials\transmisive.h">
       <Filter>src\materials</Filter>
     </ClInclude>
   </ItemGroup>

@@ -88,6 +88,11 @@ Vector3D Utils::computeReflectionDirection(const Vector3D &rayDirection, const V
 bool Utils::isTotalInternalReflection(const double &eta, const double &cosThetaI,
                                       double &cosThetaT_out)
 {
+	double radicand = 1 + pow(eta, 2)*(pow(cosThetaI, 2) - 1);
+	if (radicand > 0) {
+		cosThetaT_out = sqrt(radicand);
+		return true;
+	}
     return false;
 }
 
