@@ -30,13 +30,14 @@ Vector3D DirectShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 
 	if (its.shape->getMaterial().hasTransmission()) {
 		double eta, cosThetaI, cosThetaT_out = 0;
-		Transmisive *t = (Transmisive *) &its.shape->getMaterial();
-		eta = t->getEta();
-		cosThetaI = dot(its.normal, r.d);
+		//eta = its.shape->getMaterial().getIndexOfRefraction();
+
+		cosThetaI = dot(its.normal, -r.d);
+		eta = 1 / its.shape->getMaterial().getIndexOfRefraction();
+
 		if (!Utils::isTotalInternalReflection(eta, cosThetaI, cosThetaT_out)) {
-			Vector3D wr = Utils::computeTransmissionDirection(r, its.normal, eta, cosThetaI, 
-																cosThetaT_out);
-			Ray refRay = Ray(its.itsPoint, wr, r.depth + 1);
+			Vector3D wt = Utils::computeTransmissionDirection(r, its.normal, eta, cosThetaI, cosThetaT_out);
+			Ray refRay = Ray(its.itsPoint, wt, r.depth + 1);
 			return computeColor(refRay, objList, lsList);
 		}
 		else {

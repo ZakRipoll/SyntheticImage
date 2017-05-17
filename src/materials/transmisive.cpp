@@ -2,7 +2,7 @@
 
 Transmisive::Transmisive() {}
 
-Transmisive::Transmisive(double eta_, Vector3D spec) : eta(eta_), specular(spec)
+Transmisive::Transmisive(double eta_, Vector3D spec) : refractionIndex(eta_), specular(spec)
 {
 }
 
@@ -28,10 +28,5 @@ bool Transmisive::hasDiffuseOrGlossy() const
 
 double Transmisive::getIndexOfRefraction() const
 {
-	return 0.0;
-}
-
-double Transmisive::getEta()
-{
-	return eta;
+	return refractionIndex;
 }

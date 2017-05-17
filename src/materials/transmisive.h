@@ -18,7 +18,7 @@ class Transmisive : public  Material
 		 double getEta();
 
 	private:
-		double eta;
+		double refractionIndex;
 		Vector3D specular;
 };
 
