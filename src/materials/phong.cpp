@@ -42,6 +42,5 @@ Vector3D Phong::getReflectance(const Vector3D &n, const Vector3D &wo, const Vect
 	Vector3D wr = n * dot(n, wi) * 2.0 - wi;
 
 	Vector3D specular_reflection = specular * pow(dot(wo.normalized(), wr.normalized()), shininess);
-	return diffuse_reflectance +specular_reflection;
-	//return specular_reflection;
+	return diffuse_reflectance + specular_reflection;
 }
