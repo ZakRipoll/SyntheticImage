@@ -16,7 +16,7 @@ public:
 	Vector3D getNormalWorld(const Vector3D &pt_world) const;
 
 	virtual bool rayIntersect(const Ray &ray, Intersection &its) const;
-	virtual bool rayIntersectP(const Ray &ray) const;
+	virtual bool rayIntersectT(const Ray &ray) const;
 
 	std::string toString() const;
 

@@ -12,10 +12,11 @@ Vector3D Triangle::getNormalWorld(const Vector3D & pt_world) const
 
 bool Triangle::rayIntersect(const Ray & ray, Intersection & its) const
 {
+
 	return false;
 }
 
-bool Triangle::rayIntersectP(const Ray & ray) const
+bool Triangle::rayIntersectT(const Ray & ray) const
 {
 	return false;
 }

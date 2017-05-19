@@ -168,6 +168,7 @@
     <ClCompile Include="..\..\src\shapes\infiniteplane.cpp" />
     <ClCompile Include="..\..\src\shapes\shape.cpp" />
     <ClCompile Include="..\..\src\shapes\sphere.cpp" />
+    <ClCompile Include="..\..\src\shapes\triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\cameras\camera.h" />
@@ -195,6 +196,7 @@
     <ClInclude Include="..\..\src\shapes\infiniteplane.h" />
     <ClInclude Include="..\..\src\shapes\shape.h" />
     <ClInclude Include="..\..\src\shapes\sphere.h" />
+    <ClInclude Include="..\..\src\shapes\triangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
