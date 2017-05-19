@@ -19,7 +19,7 @@ Vector3D DirectShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 
 	Vector3D color;
 
-	Vector3D wo = -r.d;
+	Vector3D wo = -r.d.normalized();
 
 	if (its.shape->getMaterial().hasSpecular()) {
 		Vector3D wr = Utils::computeReflectionDirection(r.d,its.normal);
@@ -29,25 +29,35 @@ Vector3D DirectShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 
 	if (its.shape->getMaterial().hasTransmission()) {
 		double eta, cosThetaI, cosThetaT_out;
+		Vector3D normal = its.normal.normalized();
 
-		cosThetaI = dot(its.normal, wo);
-		eta = 1 / its.shape->getMaterial().getIndexOfRefraction();
+		cosThetaI = dot(normal, wo);
+		eta = its.shape->getMaterial().getIndexOfRefraction();
+		
+		if (cosThetaI < 0) {
+			eta = 1 / eta;
+			normal = -normal;
+			cosThetaI = dot(wo, normal);
+		}
 
 		if (!Utils::isTotalInternalReflection(eta, cosThetaI, cosThetaT_out)) {
-			Vector3D wt = Utils::computeTransmissionDirection(r, its.normal, eta, cosThetaI, cosThetaT_out);
+			Vector3D wt = Utils::computeTransmissionDirection(r, normal, eta, cosThetaI, cosThetaT_out);
 			Ray refRay = Ray(its.itsPoint, wt, r.depth + 1);
+			//return Vector3D(0, 0, 1);
 			return computeColor(refRay, objList, lsList);
-		}else {
-			Vector3D wr = Utils::computeReflectionDirection(wo, its.normal);
+		}
+
+		else {
+			Vector3D wr = Utils::computeReflectionDirection(r.d, normal);
 			Ray refRay = Ray(its.itsPoint, wr, r.depth + 1);
-			return computeColor(refRay, objList, lsList);
+			return computeColor(refRay, objList, lsList);	
 		}
 	}
 
 	for (int i = 0; i < lsList.size(); i++) 
 	{
 		Vector3D direction (lsList[i].getPosition() - its.itsPoint );
-		float distanceLS = direction.length();
+		double distanceLS = direction.length();
 		Vector3D wi = direction.normalized();
 
 		Ray shadowRay(its.itsPoint, wi);

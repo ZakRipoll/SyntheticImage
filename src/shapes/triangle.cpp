@@ -28,5 +28,5 @@ std::string Triangle::toString() const
 
 std::ostream & operator<<(std::ostream & out, const Triangle & s)
 {
-	// TODO: insertar una instrucción return aquí
+	return out;
 }
