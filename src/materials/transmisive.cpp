@@ -3,8 +3,7 @@
 Transmisive::Transmisive() {}
 
 Transmisive::Transmisive(double eta_, Vector3D spec) : refractionIndex(eta_), specular(spec)
-{
-}
+{}
 
 Vector3D Transmisive::getReflectance(const Vector3D & n, const Vector3D & wo, const Vector3D & wi) const
 {

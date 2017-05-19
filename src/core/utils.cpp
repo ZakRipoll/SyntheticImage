@@ -81,7 +81,6 @@ Vector3D Utils::scalarToRGB(double scalar)
 
 Vector3D Utils::computeReflectionDirection(const Vector3D &rayDirection, const Vector3D &normal)
 {
-    // Compute the perfect reflection direction
     return normal * 2 * dot(normal, -rayDirection) + rayDirection;
 }
 
@@ -90,12 +89,9 @@ bool Utils::isTotalInternalReflection(const double &eta, const double &cosThetaI
 {
 	double radicand = 1 + pow(eta, 2)*(pow(cosThetaI, 2) - 1);
 
-	if (radicand > 0) {
-		cosThetaT_out = sqrt(radicand);
-		return true;
-	}
-	cosThetaT_out = cosThetaI;
-    return false;
+	cosThetaT_out = (radicand > 0) ? sqrt(radicand) : -cosThetaI;
+
+	return radicand > 0;
 }
 
 Vector3D Utils::computeTransmissionDirection(const Ray &r, const Vector3D &normal,

@@ -23,26 +23,22 @@ Vector3D DirectShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 
 	if (its.shape->getMaterial().hasSpecular()) {
 		Vector3D wr = Utils::computeReflectionDirection(r.d,its.normal);
-			//its.shape->getMaterial().getReflectance(its.normal, wo, NULL);
 		Ray refRay = Ray(its.itsPoint, wr, r.depth + 1);
 		return computeColor(refRay, objList, lsList);
 	}
 
 	if (its.shape->getMaterial().hasTransmission()) {
-		double eta, cosThetaI, cosThetaT_out = 0;
-		//eta = its.shape->getMaterial().getIndexOfRefraction();
+		double eta, cosThetaI, cosThetaT_out;
 
-		cosThetaI = dot(its.normal, -r.d);
+		cosThetaI = dot(its.normal, wo);
 		eta = 1 / its.shape->getMaterial().getIndexOfRefraction();
 
 		if (!Utils::isTotalInternalReflection(eta, cosThetaI, cosThetaT_out)) {
 			Vector3D wt = Utils::computeTransmissionDirection(r, its.normal, eta, cosThetaI, cosThetaT_out);
 			Ray refRay = Ray(its.itsPoint, wt, r.depth + 1);
 			return computeColor(refRay, objList, lsList);
-		}
-		else {
-			Vector3D wr = Utils::computeReflectionDirection(r.d, its.normal);
-			//its.shape->getMaterial().getReflectance(its.normal, wo, NULL);
+		}else {
+			Vector3D wr = Utils::computeReflectionDirection(wo, its.normal);
 			Ray refRay = Ray(its.itsPoint, wr, r.depth + 1);
 			return computeColor(refRay, objList, lsList);
 		}

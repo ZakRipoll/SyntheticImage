@@ -15,7 +15,6 @@ class Transmisive : public  Material
 		 virtual bool hasTransmission() const;
 		 virtual bool hasDiffuseOrGlossy() const;
 		 virtual double getIndexOfRefraction() const;
-		 double getEta();
 
 	private:
 		double refractionIndex;
