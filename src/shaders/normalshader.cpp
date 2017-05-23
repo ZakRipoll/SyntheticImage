@@ -12,12 +12,5 @@ Vector3D NormalShader::computeColor(const Ray &r, const std::vector<Shape *> &ob
 {
     Intersection its;
 
-    if (Utils::getClosestIntersection(r, objList, its))
-    {
-        Vector3D res = (its.normal + Vector3D(1.0)) / 2.0;
-        return res;
-    } else
-    {
-        return bgColor;
-    }
+	return Utils::getClosestIntersection(r, objList, its) ? (its.normal + Vector3D(1.0)) * .5 : bgColor;
 }

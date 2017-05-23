@@ -17,13 +17,13 @@ Vector3D DirectShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 
 	if (!Utils::getClosestIntersection(r, objList, its)) return bgColor;
 
-	Vector3D color;
+	Vector3D color, wr, wo = -r.d.normalized();
 
-	Vector3D wo = -r.d.normalized();
+	Ray refRay;
 
 	if (its.shape->getMaterial().hasSpecular()) {
-		Vector3D wr = Utils::computeReflectionDirection(r.d,its.normal);
-		Ray refRay = Ray(its.itsPoint, wr, r.depth + 1);
+		wr = Utils::computeReflectionDirection(r.d,its.normal);
+		refRay = Ray(its.itsPoint, wr, r.depth + 1);
 		return computeColor(refRay, objList, lsList);
 	}
 
@@ -40,18 +40,15 @@ Vector3D DirectShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 			cosThetaI = dot(wo, normal);
 		}
 
-		if (!Utils::isTotalInternalReflection(eta, cosThetaI, cosThetaT_out)) {
-			Vector3D wt = Utils::computeTransmissionDirection(r, normal, eta, cosThetaI, cosThetaT_out);
-			Ray refRay = Ray(its.itsPoint, wt, r.depth + 1);
-			//return Vector3D(0, 0, 1);
-			return computeColor(refRay, objList, lsList);
-		}
 
-		else {
-			Vector3D wr = Utils::computeReflectionDirection(r.d, normal);
-			Ray refRay = Ray(its.itsPoint, wr, r.depth + 1);
-			return computeColor(refRay, objList, lsList);	
-		}
+		if (!Utils::isTotalInternalReflection(eta, cosThetaI, cosThetaT_out))
+			wr = Utils::computeTransmissionDirection(r, normal, eta, cosThetaI, cosThetaT_out);
+
+		else
+			wr = Utils::computeReflectionDirection(r.d, normal);
+
+		refRay = Ray(its.itsPoint, wr, r.depth + 1);
+		return computeColor(refRay, objList, lsList);
 	}
 
 	for (int i = 0; i < lsList.size(); i++) 

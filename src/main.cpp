@@ -57,15 +57,18 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	Shape *topPlan = new InfinitePlane(Vector3D(0, offset, 0), Vector3D(0, -1, 0), greyDiffuse);
 	Shape *bottomPlan = new InfinitePlane(Vector3D(0, -offset, 0), Vector3D(0, 1, 0), greyDiffuse);
 	Shape *backPlan = new InfinitePlane(Vector3D(0, 0, 3 * offset), Vector3D(0, 0, -1), blueDiffuse);
-	int p = 2;
-	Shape *triangle = new Triangle(Vector3D(2, -1, p), Vector3D(2, 1, p), Vector3D(3, 1, p), blueDiffuse);
 	
+	if(0){
+		int p = 2;
+		Shape *triangle = new Triangle(Vector3D(0.5, 0, p), Vector3D(1, 1, p), Vector3D(0, 0, p), blueDiffuse);
+		objectsList->push_back(triangle);
+	}
+
 	objectsList->push_back(leftPlan);
 	objectsList->push_back(rightPlan);
 	objectsList->push_back(topPlan);
 	objectsList->push_back(bottomPlan);
 	objectsList->push_back(backPlan);
-	objectsList->push_back(triangle);
 
 	// Place the Spheres inside the Cornell Box
 	Matrix4x4 sphereTransform1;
