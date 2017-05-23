@@ -18,6 +18,7 @@
 #include "shaders/intersectionshader.h"
 #include "shaders/depthshader.h"
 #include "shaders/directshader.h"
+#include "shaders/normalshader.h"
 
 #include "materials\phong.h"
 #include "materials\mirror.h"
@@ -58,9 +59,9 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	Shape *bottomPlan = new InfinitePlane(Vector3D(0, -offset, 0), Vector3D(0, 1, 0), greyDiffuse);
 	Shape *backPlan = new InfinitePlane(Vector3D(0, 0, 3 * offset), Vector3D(0, 0, -1), blueDiffuse);
 	
-	if(0){
-		int p = 2;
-		Shape *triangle = new Triangle(Vector3D(0.5, 0, p), Vector3D(1, 1, p), Vector3D(0, 0, p), blueDiffuse);
+	if(!0){
+		int p = 3;
+		Shape *triangle = new Triangle(Vector3D(0, -0.5, p), Vector3D(0.3, 0.3, p), Vector3D(-0.3, -0.3, p), blueDiffuse);
 		objectsList->push_back(triangle);
 	}
 
@@ -99,6 +100,43 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	PointLightSource pointLS3(lightPosition3, intensity);
 	lightSourceList->push_back(pointLS1);
 	lightSourceList->push_back(pointLS2);
+	lightSourceList->push_back(pointLS3);
+}
+
+void buildSceneTraiangle(Camera* &cam, Film* &film,
+	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
+{
+	/* **************************** */
+	/* Declare and place the camera */
+	/* **************************** */
+	Matrix4x4 cameraToWorld = Matrix4x4::translate(Vector3D(0, 0, -3));
+	double fovDegrees = 60;
+	double fovRadians = Utils::degreesToRadians(fovDegrees);
+	cam = new PerspectiveCamera(cameraToWorld, fovRadians, *film);
+
+	/* ********* */
+	/* Materials */
+	/* ********* */
+	Material *redDiffuse = new Phong(Vector3D(0.7, 0.2, 0.3), Vector3D(0, 0, 0), 100);
+
+	/* ******* */
+	/* Objects */
+	/* ******* */
+	objectsList = new std::vector<Shape*>;
+	double offset = 3.0;
+	Matrix4x4 idTransform;
+
+	Shape *triangle = new Triangle(Vector3D(-2, -1.7, 0), Vector3D(2, -1.7, 0), Vector3D(0, 1.75, 0), redDiffuse);
+	objectsList->push_back(triangle);
+
+
+	/* ****** */
+	/* Lights */
+	/* ****** */
+	lightSourceList = new std::vector<PointLightSource>;
+	Vector3D lightPosition3 = Vector3D(0, 0 , -1);
+	Vector3D intensity = Vector3D(10, 10, 10); // Radiant intensity (watts/sr)
+	PointLightSource pointLS3(lightPosition3, intensity);
 	lightSourceList->push_back(pointLS3);
 }
 
@@ -146,6 +184,12 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     sphereTransform3 = sphereTransform3.translate(Vector3D(0.3, -0.75, 3.5));
     Shape *s3 = new Sphere (0.25, sphereTransform3, pink_50);
 	
+	if (!0) {
+		int p = 2;
+		Shape *triangle = new Triangle(Vector3D(-1.0, -0.5, 2 * std::sqrt(2.0)), Vector3D(0.3, -0.75, 3.5),/*Big*/Vector3D(1.0, 0.0, 6), green_50);
+		objectsList->push_back(triangle);
+	}
+
     // Store the objects in the object list
     objectsList->push_back(s1);
     objectsList->push_back(s2);

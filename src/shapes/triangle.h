@@ -26,7 +26,7 @@ private:
 	Vector3D cWorld;
 	Vector3D nWorld;
 
-	Vector3D vab, vac, vbc;
+	Vector3D vab, vac, vca, vbc;
 };
 
 std::ostream& operator<<(std::ostream &out, const Triangle &s);
