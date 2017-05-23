@@ -58,12 +58,6 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	Shape *topPlan = new InfinitePlane(Vector3D(0, offset, 0), Vector3D(0, -1, 0), greyDiffuse);
 	Shape *bottomPlan = new InfinitePlane(Vector3D(0, -offset, 0), Vector3D(0, 1, 0), greyDiffuse);
 	Shape *backPlan = new InfinitePlane(Vector3D(0, 0, 3 * offset), Vector3D(0, 0, -1), blueDiffuse);
-	
-	if(!0){
-		int p = 3;
-		Shape *triangle = new Triangle(Vector3D(0, -0.5, p), Vector3D(0.3, 0.3, p), Vector3D(-0.3, -0.3, p), blueDiffuse);
-		objectsList->push_back(triangle);
-	}
 
 	objectsList->push_back(leftPlan);
 	objectsList->push_back(rightPlan);
@@ -86,6 +80,12 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	objectsList->push_back(s1);
 	objectsList->push_back(s2);
 	objectsList->push_back(s3);
+
+	if (!0) {
+		float p = 0.5;
+		Shape *triangle = new Triangle(Vector3D(0.6, -0.6, p), Vector3D(1.4, -0.6, p), Vector3D(1, 0.6, p+1), mirror);
+		objectsList->push_back(triangle);
+	}
 
 	/* ****** */
 	/* Lights */
