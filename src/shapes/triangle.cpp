@@ -2,7 +2,10 @@
 
 Triangle::Triangle(const Vector3D a_, const Vector3D b_, const Vector3D c_, Material * material_):Shape(Matrix4x4(),material_), aWorld(a_),bWorld(b_),cWorld(c_)
 {
-	nWorld = cross((cWorld - aWorld), (bWorld - aWorld));
+	vab = bWorld - aWorld;
+	vac = cWorld - aWorld;
+	vbc = cWorld - bWorld;
+	nWorld = cross(vac, vab);
 }
 
 Vector3D Triangle::getNormalWorld(const Vector3D & pt_world) const
@@ -12,13 +15,56 @@ Vector3D Triangle::getNormalWorld(const Vector3D & pt_world) const
 
 bool Triangle::rayIntersect(const Ray & ray, Intersection & its) const
 {
+	double denominator = dot(ray.d, nWorld);
 
-	return false;
+	if (std::abs(denominator) < Epsilon) return false;
+
+	double tHit = dot((aWorld - ray.o), nWorld) / denominator;
+
+	if (tHit < ray.minT || tHit > ray.maxT) return false;
+
+	Vector3D phit = ray.o + ray.d * tHit;
+
+	//Infinite Plane
+
+	if(dot(cross(vab, phit - aWorld), nWorld) <= 0) return false;
+
+	if(dot(cross(vac, phit - cWorld), nWorld) <= 0) return false;
+
+	if(dot(cross(vbc, phit - bWorld), nWorld) <= 0) return false;
+
+	// Fill the intersection details
+	its.itsPoint = phit;
+	its.normal = nWorld;
+	its.shape = this;
+
+	// Update the ray maxT
+	ray.maxT = tHit;
+
+	return true;
 }
 
-bool Triangle::rayIntersectT(const Ray & ray) const
+bool Triangle::rayIntersectP(const Ray & ray) const
 {
-	return false;
+	double denominator = dot(ray.d, nWorld);
+
+	if (std::abs(denominator) < Epsilon) return false;
+
+	double tHit = dot((aWorld - ray.o), nWorld) / denominator;
+
+	if (tHit < ray.minT || tHit > ray.maxT) return false;
+
+	Vector3D phit = ray.o + ray.d * tHit;
+
+	//Infinite Plane
+
+	if (dot(cross(vab, phit - aWorld), nWorld) < 0) return false;
+
+	if (dot(cross(vac, phit - aWorld), nWorld) < 0) return false;
+
+	if (dot(cross(vbc, phit - aWorld), nWorld) < 0) return false;
+
+	return true;
 }
 
 std::string Triangle::toString() const

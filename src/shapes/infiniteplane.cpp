@@ -1,8 +1,6 @@
 #include "infiniteplane.h"
 
-InfinitePlane::InfinitePlane(const Vector3D &p0_, const Vector3D &normal_,
-         Material *mat_) :
-    Shape(Matrix4x4(), mat_),
+InfinitePlane::InfinitePlane(const Vector3D &p0_, const Vector3D &normal_, Material *mat_) :  Shape(Matrix4x4(), mat_),
     p0World(p0_), nWorld(normal_.normalized())
 { }
 

@@ -16,7 +16,7 @@ public:
 	Vector3D getNormalWorld(const Vector3D &pt_world) const;
 
 	virtual bool rayIntersect(const Ray &ray, Intersection &its) const;
-	virtual bool rayIntersectT(const Ray &ray) const;
+	virtual bool rayIntersectP(const Ray &ray) const;
 
 	std::string toString() const;
 
@@ -25,6 +25,8 @@ private:
 	Vector3D bWorld;
 	Vector3D cWorld;
 	Vector3D nWorld;
+
+	Vector3D vab, vac, vbc;
 };
 
 std::ostream& operator<<(std::ostream &out, const Triangle &s);
