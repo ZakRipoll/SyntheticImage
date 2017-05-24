@@ -5,7 +5,7 @@ GlobalShader::GlobalShader()
 {
 }
 
-GlobalShader::GlobalShader(Vector3D bgColor_) : bgColor(bgColor_)
+GlobalShader::GlobalShader(Vector3D bgColor_, int rays_, int bounces_) : bgColor(bgColor_), rays(rays_), bounces(bounces_)
 {
 }
 
@@ -16,7 +16,7 @@ Vector3D GlobalShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 
 	if (!Utils::getClosestIntersection(r, objList, its)) return bgColor;
 
-	Vector3D color, wr, wo = -r.d.normalized();
+	Vector3D color, indirect, wr, wo = -r.d.normalized();
 
 	Ray refRay;
 
@@ -66,9 +66,13 @@ Vector3D GlobalShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 	}
 
 	//Indirect Light
-		Vector3D at = Vector3D(-1,-1,-1);
-		Vector3D kd = its.shape->getMaterial().getDiffuseCoefficient();
-		color += Utils::multiplyPerCanal(kd,at);
-
-	return color;
+	if (r.depth < bounces) {
+		for (int i = 0; i < rays; i++) {
+			wr = sampler.getSample(its.normal);
+			refRay = Ray(its.itsPoint, wr, r.depth + 1);
+			indirect += computeColor(refRay, objList, lsList);
+		}
+		indirect /= rays;
+	}
+	return color + indirect;
 }
