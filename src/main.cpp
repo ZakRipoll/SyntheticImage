@@ -19,6 +19,7 @@
 #include "shaders/depthshader.h"
 #include "shaders/directshader.h"
 #include "shaders/normalshader.h"
+#include "shaders/globalshader.h"
 
 #include "materials\phong.h"
 #include "materials\mirror.h"
@@ -271,13 +272,14 @@ int main()
     Vector3D intersectionColor(1,0,0);
 	Shader *shader;
 	
-	if(0)
+	if (0)
 		shader = new IntersectionShader(intersectionColor, bgColor);
-	else if(0)
+	else if (0)
 		shader = new DepthShader(Vector3D(.4, 1, .4), 8, bgColor);
-	else
+	else if (0)
 		shader = new DirectShader(bgColor);
-
+	else
+		shader = new GlobalShader(bgColor);
     // Declare pointers to all the variables which describe the scene
     Camera *cam;
     std::vector<Shape*> *objectsList;

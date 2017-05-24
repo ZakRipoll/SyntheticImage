@@ -18,7 +18,9 @@ public:
 	virtual bool hasSpecular() const;
 	virtual bool hasTransmission() const;
 	virtual bool hasDiffuseOrGlossy() const;
-	virtual double getIndexOfRefraction() const;
+	virtual Vector3D getDiffuseCoefficient() const;
+	double Phong::getIndexOfRefraction() const;
+	
 
 private:
 	Vector3D diffuse;

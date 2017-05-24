@@ -4,7 +4,8 @@
 #include <math.h>       /* cos */
 
 Phong::Phong()
-{ }
+{
+}
 
 Phong::Phong(Vector3D diffuse_, Vector3D specular_, int shininess_) : diffuse(diffuse_), specular(specular_), shininess(shininess_)
 {
@@ -30,6 +31,11 @@ bool Phong::hasDiffuseOrGlossy() const
 	return true;
 }
 
+Vector3D Phong::getDiffuseCoefficient() const
+{
+	return diffuse;
+}
+
 double Phong::getIndexOfRefraction() const
 {
 	return 0.0;
@@ -41,6 +47,7 @@ Vector3D Phong::getReflectance(const Vector3D &n, const Vector3D &wo, const Vect
 
 	Vector3D wr = n * dot(n, wi) * 2.0 - wi;
 
-	Vector3D specular_reflection = specular * pow(dot(wo.normalized(), wr.normalized()), shininess);
+	Vector3D specular_reflection = specular * pow(dot(wo.normalized(), wr.normalized()), shininess);
+
 	return diffuse_reflectance + specular_reflection;
 }
