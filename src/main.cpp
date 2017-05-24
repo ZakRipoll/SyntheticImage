@@ -279,7 +279,7 @@ int main()
 	else if (0)
 		shader = new DirectShader(bgColor);
 	else
-		shader = new GlobalShader(bgColor, 2, 2);
+		shader = new GlobalShader(bgColor, 2, 1);
 
     // Declare pointers to all the variables which describe the scene
     Camera *cam;

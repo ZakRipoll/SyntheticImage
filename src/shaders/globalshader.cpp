@@ -66,13 +66,18 @@ Vector3D GlobalShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 	}
 
 	//Indirect Light
-	if (r.depth < bounces) {
+	if (r.depth == 0) {
 		for (int i = 0; i < rays; i++) {
 			wr = sampler.getSample(its.normal);
 			refRay = Ray(its.itsPoint, wr, r.depth + 1);
 			indirect += computeColor(refRay, objList, lsList);
 		}
 		indirect /= rays;
+	}
+	else {
+		Vector3D at = Vector3D(0, 0, 1);
+		Vector3D kd = its.shape->getMaterial().getDiffuseCoefficient();
+		indirect = Utils::multiplyPerCanal(kd, at);
 	}
 	return color + indirect;
 }
