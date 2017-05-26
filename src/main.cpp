@@ -95,7 +95,7 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	Vector3D lightPosition1 = Vector3D(0, offset - 1, 2 * offset);
 	Vector3D lightPosition2 = Vector3D(0, offset - 1, 0);
 	Vector3D lightPosition3 = Vector3D(0, offset - 1, offset);
-	Vector3D intensity = Vector3D(10, 10, 10); // Radiant intensity (watts/sr)
+	Vector3D intensity = Vector3D(5, 5, 5); // Radiant intensity (watts/sr)
 	PointLightSource pointLS1(lightPosition1, intensity);
 	PointLightSource pointLS2(lightPosition2, intensity);
 	PointLightSource pointLS3(lightPosition3, intensity);
@@ -279,7 +279,7 @@ int main()
 	else if (0)
 		shader = new DirectShader(bgColor);
 	else
-		shader = new GlobalShader(bgColor, 50, 3);
+		shader = new GlobalShader(bgColor, 150, 3);
 
     // Declare pointers to all the variables which describe the scene
     Camera *cam;
