@@ -82,7 +82,7 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	objectsList->push_back(s2);
 	objectsList->push_back(s3);
 
-	if (0) {
+	if (!0) {
 		float p = 0.5;
 		Shape *triangle = new Triangle(Vector3D(0.6, -0.6, p), Vector3D(1.4, -0.6, p), Vector3D(1, 0.6, p+1), mirror);
 		objectsList->push_back(triangle);
@@ -185,7 +185,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     sphereTransform3 = sphereTransform3.translate(Vector3D(0.3, -0.75, 3.5));
     Shape *s3 = new Sphere (0.25, sphereTransform3, pink_50);
 	
-	if (!0) {
+	if (0) {
 		int p = 2;
 		Shape *triangle = new Triangle(Vector3D(-1.0, -0.5, 2 * std::sqrt(2.0)), Vector3D(0.3, -0.75, 3.5),/*Big*/Vector3D(1.0, 0.0, 6), green_50);
 		objectsList->push_back(triangle);
@@ -279,7 +279,7 @@ int main()
 	else if (0)
 		shader = new DirectShader(bgColor);
 	else
-		shader = new GlobalShader(bgColor, 150, 3);
+		shader = new GlobalShader(bgColor, 30, 3);
 
     // Declare pointers to all the variables which describe the scene
     Camera *cam;
