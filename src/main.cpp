@@ -82,7 +82,7 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	objectsList->push_back(s2);
 	objectsList->push_back(s3);
 
-	if (!0) {
+	if (0) {
 		float p = 0.5;
 		Shape *triangle = new Triangle(Vector3D(0.6, -0.6, p), Vector3D(1.4, -0.6, p), Vector3D(1, 0.6, p+1), mirror);
 		objectsList->push_back(triangle);
@@ -279,7 +279,7 @@ int main()
 	else if (0)
 		shader = new DirectShader(bgColor);
 	else
-		shader = new GlobalShader(bgColor, 2, 1);
+		shader = new GlobalShader(bgColor, 50, 3);
 
     // Declare pointers to all the variables which describe the scene
     Camera *cam;

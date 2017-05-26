@@ -22,7 +22,7 @@ Vector3D GlobalShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 
 	if (its.shape->getMaterial().hasSpecular()) {
 		wr = Utils::computeReflectionDirection(r.d, its.normal);
-		refRay = Ray(its.itsPoint, wr, r.depth + 1);
+		refRay = Ray(its.itsPoint, wr, r.depth);
 		return computeColor(refRay, objList, lsList);
 	}
 
@@ -46,7 +46,7 @@ Vector3D GlobalShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 		else
 			wr = Utils::computeReflectionDirection(r.d, normal);
 
-		refRay = Ray(its.itsPoint, wr, r.depth + 1);
+		refRay = Ray(its.itsPoint, wr, r.depth);
 		return computeColor(refRay, objList, lsList);
 	}
 
@@ -70,14 +70,23 @@ Vector3D GlobalShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 		for (int i = 0; i < rays; i++) {
 			wr = sampler.getSample(its.normal);
 			refRay = Ray(its.itsPoint, wr, r.depth + 1);
-			indirect += computeColor(refRay, objList, lsList);
+			indirect += Utils::multiplyPerCanal(computeColor(refRay, objList, lsList),
+												its.shape->getMaterial().getReflectance(its.normal,wr,wo));
 		}
 		indirect /= rays;
 	}
-	else {
-		Vector3D at = Vector3D(0, 0, 1);
+
+	else{
+		Vector3D at = Vector3D(0.1, 0.1, 0.1);
 		Vector3D kd = its.shape->getMaterial().getDiffuseCoefficient();
 		indirect = Utils::multiplyPerCanal(kd, at);
 	}
+
+	/*else {
+		wr = Utils::computeReflectionDirection(r.d, its.normal.normalized());
+		Vector3D colorReflected = computeColor();
+		color /= 
+	}*/
+
 	return color + indirect;
 }
