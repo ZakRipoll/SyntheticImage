@@ -311,7 +311,10 @@ void executeMenu(int option, Camera* &cam, Shader* &shader, Film* &film,
 		break;
 
 	case 8:
-		shader = new GlobalShader(bgColor, 10, 2);
+		int raynum;
+		std::cout << "Number of Rays: ";
+		std::cin >> raynum;
+		shader = new GlobalShader(bgColor, raynum, 2);
 		buildSceneCornellBox(cam, film, objectsList, lightSourceList, 1, 1, 1);
 		fileName = "8 (2-bounces Indirect Illumination";
 		break;
@@ -328,7 +331,11 @@ void executeMenu(int option, Camera* &cam, Shader* &shader, Film* &film,
 		buildSceneCornellBox(cam, film, objectsList, lightSourceList, 1, 1, 1);
 		fileName = "9 (n-bounces Indirect Illumination";
 		break;
+
+	default:
+		exit(0);
 	}
+	
 
 	fileName += ".bmp";
 }
