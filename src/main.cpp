@@ -26,7 +26,7 @@
 #include "materials\transmisive.h"
 
 void buildSceneCornellBox(Camera* &cam, Film* &film,
-	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList)
+	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList, bool reflect, bool snell, bool triangle)
 {
 	/* **************************** */
 	/* Declare and place the camera */
@@ -43,9 +43,19 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	Material *greenDiffuse = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0, 0, 0), 100);
 	Material *greyDiffuse = new Phong(Vector3D(0.8, 0.8, 0.8), Vector3D(0, 0, 0), 100);
 	Material *blueDiffuse = new Phong(Vector3D(0.3, 0.2, 0.7), Vector3D(0, 0, 0), 100);
-	Material *transmissive = new Transmisive(1.1, Vector3D(1));
-	Material *mirror = new Mirror(Vector3D(1, 0.9, 0.85));
 	Material *red_100 = new Phong(Vector3D(0.7, 0.2, 0.3), Vector3D(0.7, 0.7, 0.2), 100);
+
+	Material *transmissive, *mirror;
+
+	if( reflect )
+		mirror = new Mirror(Vector3D(1, 0.9, 0.85));
+	else
+		mirror = new Phong(Vector3D(0.0, 0.9, 0.9), Vector3D(0.1, 0.9, 0.9), 50);
+
+	if( snell )
+		transmissive = new Transmisive(1.1, Vector3D(1));
+	else
+		transmissive = new Phong(Vector3D(1, 1, 0.2), Vector3D(1, 1, 0.2), 20);
 
 	/* ******* */
 	/* Objects */
@@ -82,7 +92,7 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	objectsList->push_back(s2);
 	objectsList->push_back(s3);
 
-	if (!0) {
+	if (triangle) {
 		float p = 0.5;
 		Shape *triangle = new Triangle(Vector3D(0.6, -0.6, p), Vector3D(1.4, -0.6, p), Vector3D(1, 0.6, p+1), mirror);
 		objectsList->push_back(triangle);
@@ -143,7 +153,7 @@ void buildSceneTraiangle(Camera* &cam, Film* &film,
 
 void buildSceneSphere(Camera* &cam, Film* &film,
                       std::vector<Shape*>* &objectsList,
-                      std::vector<PointLightSource>* &lightSourceList)
+                      std::vector<PointLightSource>* &lightSourceList, bool plane, bool triangle)
 {
     /* **************************** */
     /* Declare and place the camera */
@@ -185,8 +195,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     sphereTransform3 = sphereTransform3.translate(Vector3D(0.3, -0.75, 3.5));
     Shape *s3 = new Sphere (0.25, sphereTransform3, pink_50);
 	
-	if (0) {
-		int p = 2;
+	if (triangle) {
 		Shape *triangle = new Triangle(Vector3D(-1.0, -0.5, 2 * std::sqrt(2.0)), Vector3D(0.3, -0.75, 3.5),/*Big*/Vector3D(1.0, 0.0, 6), green_50);
 		objectsList->push_back(triangle);
 	}
@@ -197,7 +206,7 @@ void buildSceneSphere(Camera* &cam, Film* &film,
     objectsList->push_back(s3);
 
 	// Infinite Plane
-	if (!0) {
+	if (plane) {
 		Material *greyDiffuse = new Phong(Vector3D(0.8, 0.8, 0.8), Vector3D(0, 0, 0), 100);
 		double offset = 3.0;
 		Shape *bottomPlane = new InfinitePlane(Vector3D(0, -offset, 0), Vector3D(0, 1, 0), greyDiffuse);
@@ -256,6 +265,31 @@ void raytrace(Camera* &cam, Shader* &shader, Film* &film,
     }
 }
 
+int menu() {
+
+	int option;
+
+	std::cout << "Menu" << std::endl;
+
+	std::cout << "Assignment 3" << std::endl;
+	std::cout << "\t 0: 3 Intersection Shader" << std::endl;
+	std::cout << "\t 1: 4 Depth Shader" << std::endl;	std::cout << "\t 2: 6 Direct Illumination Shader" << std::endl;	std::cout << "Assignment 4" << std::endl;	std::cout << "\t 3: 2 The Infinite Plane Class" << std::endl;
+	std::cout << "\t 4: 2.2 Cornell box" << std::endl;
+	std::cout << "\t 5: 3.2 Mirror material" << std::endl;
+	std::cout << "\t 6: 3.3 Transmissive material" << std::endl;
+	std::cout << "\t 7: 3.4 Ray triangle" << std::endl;
+
+	std::cout << "Assignment 5" << std::endl;
+	std::cout << "\t 8: (2-bounces Indirect Illumination)" << std::endl;
+	std::cout << "\t 9: (n-bounces Indirect Illumination)" << std::endl;
+
+	std::cout << "\nSelect one option: ";
+
+	std::cin >> option;
+
+	return option;
+}
+
 int main()
 {
     std::string separator     = "\n----------------------------------------------\n";
@@ -266,36 +300,109 @@ int main()
     Film *film;
     film = new Film(720, 576);
 
+	//EVALUATION
+	string fileName = "./output.bmp";
+
 
     // Declare the shader
     Vector3D bgColor(0.0, 0.0, 0.0); // Background color (for rays which do not intersect anything)
     Vector3D intersectionColor(1,0,0);
 	Shader *shader;
+
+	// Declare pointers to all the variables which describe the scene
+	Camera *cam;
+	std::vector<Shape*> *objectsList;
+	std::vector<PointLightSource> *lightSourceList;
+
+	switch ( menu() ) {
+
+		case 0:
+			shader = new IntersectionShader(intersectionColor, bgColor);
+			buildSceneSphere(cam, film, objectsList, lightSourceList, 0, 0);
+			fileName = "0 Intersection Shader";
+		break;
+
+		case 1:
+			shader = new DepthShader(Vector3D(.4, 1, .4), 8, bgColor);
+			buildSceneSphere(cam, film, objectsList, lightSourceList, 0, 0);
+			fileName = "1 Depth Shader";
+		break;
+
+		case 2:
+			shader = new DirectShader(bgColor);
+			buildSceneSphere(cam, film, objectsList, lightSourceList, 0, 0);
+			fileName = "2 Direct Illumination Shader";
+		break;
+
+		case 3:
+			shader = new DirectShader(bgColor);
+			buildSceneSphere(cam, film, objectsList, lightSourceList, 1, 0);
+			fileName = "3 The Infinite Plane Class";
+		break;
+
+		case 4:
+			shader = new DirectShader(bgColor);
+			buildSceneCornellBox(cam, film, objectsList, lightSourceList, 0, 0, 0);
+			fileName = "4 Cornell box";
+		break;
+
+		case 5:
+			shader = new DirectShader(bgColor);
+			buildSceneCornellBox(cam, film, objectsList, lightSourceList, 1, 0, 0);
+			fileName = "5 Mirror material";
+		break;
+
+		case 6:
+			shader = new DirectShader(bgColor);
+			buildSceneCornellBox(cam, film, objectsList, lightSourceList, 1, 1, 0);
+			fileName = "6 Transmissive material";
+		break;
+
+		case 7:
+			shader = new DirectShader(bgColor);
+			buildSceneCornellBox(cam, film, objectsList, lightSourceList, 1, 1, 1);
+			fileName = "7 Ray triangle";
+		break;
+
+		case 8:
+			shader = new GlobalShader(bgColor, 10, 2);
+			buildSceneCornellBox(cam, film, objectsList, lightSourceList, 1, 1, 1);
+			fileName = "8 (2-bounces Indirect Illumination";
+		break;
+
+		case 9:
+			int bounces;
+			std::cout << "Number of bounces: " <<;
+			std::cin >> bounces;
+
+			shader = new GlobalShader(bgColor, 10, bounces);
+			buildSceneCornellBox(cam, film, objectsList, lightSourceList, 1, 1, 1);
+			fileName = "9 (n-bounces Indirect Illumination";
+		break;
+	}
+
+	fileName += ".bmp";
+
 	
-	if (0)
+	/*if (0)
 		shader = new IntersectionShader(intersectionColor, bgColor);
 	else if (0)
 		shader = new DepthShader(Vector3D(.4, 1, .4), 8, bgColor);
 	else if (0)
 		shader = new DirectShader(bgColor);
 	else
-		shader = new GlobalShader(bgColor, 30, 3);
-
-    // Declare pointers to all the variables which describe the scene
-    Camera *cam;
-    std::vector<Shape*> *objectsList;
-    std::vector<PointLightSource> *lightSourceList;
+		shader = new GlobalShader(bgColor, 10, 2);
 
     // Build the scene
-	if (0)buildSceneSphere(cam, film, objectsList, lightSourceList);
-	else buildSceneCornellBox(cam, film, objectsList, lightSourceList);
+	if (0)buildSceneSphere(cam, film, objectsList, lightSourceList, 1, 0);
+	else buildSceneCornellBox(cam, film, objectsList, lightSourceList, 1, 1, 1);*/
 
     // Launch some rays!
     raytrace(cam, shader, film, objectsList, lightSourceList);
 
     // Save the final result to file
-    std::cout << "\n\nSaving the result to file output.bmp\n" << std::endl;
-    film->save();
+    std::cout << "\n\nSaving the result to file " << fileName << "\n" << std::endl;
+    film->save(fileName);
 
     std::cout << "\n\n" << std::endl;
     return 0;
