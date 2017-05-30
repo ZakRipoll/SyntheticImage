@@ -105,6 +105,12 @@ Vector3D Vector3D::normalized() const
     return (*this)/length();
 }
 
+void Vector3D::absolut() {
+	x = abs(x);
+	y = abs(y);
+	z = abs(z);
+}
+
 // Stream insertion operator
 std::ostream& operator<<(std::ostream& out, const Vector3D &v)
 {

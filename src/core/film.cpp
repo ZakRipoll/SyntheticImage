@@ -64,7 +64,7 @@ void Film::clearData()
     }
 }
 
-int Film::save(std::string name)
+int Film::save(std::string fileName)
 {
-    return BitMap::save(data, width, height, name);
+    return BitMap::save(data, width, height, fileName);
 }

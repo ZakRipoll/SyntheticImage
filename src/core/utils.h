@@ -16,7 +16,7 @@ public:
     Utils();
 
     static bool getClosestIntersection(const Ray &cameraRay, const std::vector<Shape*> &objectsList, Intersection &its);
-    static bool hasIntersection(const Ray &cameraRay, const std::vector<Shape*> &objectsList);
+    static bool hasIntersection(const Ray &ray, const std::vector<Shape*> &objectsList);
     static Vector3D scalarToRGB(double scalar);
     static double degreesToRadians(double degrees);
 

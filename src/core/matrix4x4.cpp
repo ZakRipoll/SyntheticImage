@@ -160,14 +160,33 @@ Vector3D Matrix4x4::transformPoint(const Vector3D &p) const
 Ray Matrix4x4::transformRay(const Ray &r) const
 {
     Ray transformedRay = r;
+    Vector3D transformedOrigin = transformPoint(r.o);
+    Vector3D transformedDir    = transformVector(r.d);
 
-    //std::cout << "PLEASE COMPLETE THE Matrix4x4::transformRay()) FUNCTION!" << std::endl;
-    // (...)
-	transformedRay.o = transformPoint(r.o);
-	transformedRay.d = transformVector(r.d); 
-	
+    transformedRay.o = transformedOrigin;
+    transformedRay.d = transformedDir;
+
     return transformedRay;
 }
+
+//Normal Matrix4x4::operator*(const Normal &n) const
+//{
+//    double xTransformed, yTransformed, zTransformed;
+
+//    xTransformed = data[0][0] * n.x +
+//                   data[0][1] * n.y +
+//                   data[0][2] * n.z;
+
+//    yTransformed = data[1][0] * n.x +
+//                   data[1][1] * n.y +
+//                   data[1][2] * n.z;
+
+//    zTransformed = data[2][0] * n.x +
+//                   data[2][1] * n.y +
+//                   data[2][2] * n.z;
+
+//    return Normal(xTransformed, yTransformed, zTransformed);
+//}
 
 std::string Matrix4x4::toString() const
 {

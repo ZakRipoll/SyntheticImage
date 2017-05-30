@@ -1,7 +1,7 @@
 #include "perspective.h"
 
 PerspectiveCamera::PerspectiveCamera(const Matrix4x4 &cameraToWorld_, const double fov_,
-            const Film &film_ )
+                const Film &film_ )
     : Camera(cameraToWorld_, film_),
       fov(fov_)
 { }
@@ -27,13 +27,22 @@ Vector3D PerspectiveCamera::ndcToCameraSpace(const double u, const double v) con
 Ray PerspectiveCamera::generateRay(const double u, const double v) const
 {
     // Convert the sample to camera coordinates
-    Vector3D imagePlanePoint = ndcToCameraSpace(u, v);
     Vector3D rOrig(0, 0, 0);
-	Vector3D rDir = imagePlanePoint - rOrig;
-    // COMPLETE THE REST OF THE FUNCTION
-	Ray raig = Ray(rOrig, rDir);
-	raig = cameraToWorld.transformRay(raig);
-	raig.d.normalized();
-	// Make sure the ray is normalized
-	return raig;
+
+    Vector3D imagePlanePoint = ndcToCameraSpace(u, v);
+
+    Vector3D rDir = imagePlanePoint - rOrig;
+    rDir = rDir.normalized();
+
+    // Construct the ray
+    size_t rayDepth = 0;
+    Ray r(rOrig, rDir, rayDepth);
+
+    // Convert the ray to world coordinates
+    r = cameraToWorld.transformRay(r);
+
+    // Make sure the ray is normalized
+    r.d = r.d.normalized();
+
+    return r;
 }

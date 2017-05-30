@@ -13,3 +13,96 @@ Vector3D Utils::multiplyPerCanal(const Vector3D &v1, const Vector3D &v2)
     return Vector3D(v1.x*v2.x, v1.y*v2.y, v1.z*v2.z);
 }
 
+bool Utils::hasIntersection(const Ray &ray, const std::vector<Shape*> &objectsList)
+{
+    for(size_t objindex = 0; objindex < objectsList.size(); objindex ++)
+    {
+		const Shape *obj = objectsList.at(objindex);
+
+		 if (obj->rayIntersectP(ray)) return true;
+    }
+
+    return false;
+}
+
+bool Utils::getClosestIntersection(const Ray &cameraRay, const std::vector<Shape*> &objectsList, Intersection &its)
+{
+	bool colision = false;
+	 
+	for (size_t objindex = 0; objindex < objectsList.size(); objindex++)
+	{
+		const Shape *obj = objectsList.at(objindex);
+
+		colision |= obj->rayIntersect(cameraRay, its);
+	}
+    return colision;
+}
+
+double interpolate(double val, double y0, double x0, double y1, double x1 )
+{
+    return (val-x0)*(y1-y0)/(x1-x0) + y0;
+}
+
+double getRed(double value)
+{
+    if (value > 0.5)
+        return interpolate( value, 0.0, 0.5, 1.0, 1.0 );
+    else
+        return 0.0;
+}
+
+double getGreen(double value)
+{
+    if (value < 0.25)
+        return 0.0;
+    else if (value < 0.5)
+        return interpolate(value, 0.0, 0.25, 1, 0.5);
+    else if (value < 0.75)
+        return interpolate(value, 1, 0.5, 0, 0.75);
+    else
+        return 0;
+}
+
+double getBlue(double value)
+{
+    if (value < 0.5)
+        return interpolate(value, 1.0, 0.0, 0.0, 0.5);
+    else
+        return 0;
+}
+
+
+Vector3D Utils::scalarToRGB(double scalar)
+{
+    return Vector3D( getRed(scalar),
+                getGreen(scalar),
+                getBlue(scalar) );
+}
+
+Vector3D Utils::computeReflectionDirection(const Vector3D &rayDirection, const Vector3D &normal)
+{
+    return normal * 2 * dot(normal, -rayDirection) + rayDirection;
+}
+
+bool Utils::isTotalInternalReflection(const double &eta, const double &cosThetaI,
+                                      double &cosThetaT_out)
+{
+	double radicand = 1 + (pow(eta, 2)*(pow(cosThetaI, 2) - 1));
+
+	cosThetaT_out = (radicand >= 0) ? sqrt(radicand) : cosThetaI;
+
+	return radicand < 0;
+}
+
+Vector3D Utils::computeTransmissionDirection(const Ray &r, const Vector3D &normal,
+                                             const double &eta, const double &cosThetaI,
+                                             const double &cosThetaT)
+{
+    return r.d*eta + normal*(eta*cosThetaI - cosThetaT);
+}
+
+double Utils::computeReflectanceCoefficient(const double &eta, const double &cosThetaI,
+                                            const double &cosThetaT)
+{
+    return 0.0;
+}
