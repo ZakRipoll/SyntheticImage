@@ -11,6 +11,7 @@
 #include "shapes/sphere.h"
 #include "shapes/infiniteplane.h"
 #include "shapes/triangle.h"
+#include "shapes/mesh.h"
 
 #include "cameras/ortographic.h"
 #include "cameras/perspective.h"
@@ -363,7 +364,13 @@ int main()
 	std::vector<Shape*> *objectsList;
 	std::vector<PointLightSource> *lightSourceList;
 
-	executeMenu(menu(), cam, shader, film, objectsList, lightSourceList, bgColor, intersectionColor, fileName);
+	//executeMenu(menu(), cam, shader, film, objectsList, lightSourceList, bgColor, intersectionColor, fileName);
+
+	Mesh* mesh = new Mesh();
+	
+	mesh->loadOBJ("lee.obj");
+
+	return 0;
 
 	// Launch some rays!
 	raytrace(cam, shader, film, objectsList, lightSourceList);

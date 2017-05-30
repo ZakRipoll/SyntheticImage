@@ -8,13 +8,15 @@
 #include <vector>
 #include <iostream>
 #include "../core/vector3d.h"
+#include "triangle.h"
 
 class Mesh
 {
 public:
-	std::vector< Vector3D > vertices; //here we store the vertices
-	std::vector< Vector3D > normals;	 //here we store the normals
-	//std::vector< Vector2 > uvs;	 //here we store the texture coordinates, OPCIONAL XD
+	std::vector< Vector3D > vertices;	//here we store the vertices
+	std::vector< Vector3D > normals;	//here we store the normals
+	std::vector< Shape > triangles;	//here we store the triangles
+	//std::vector< Vector2 > uvs;		//here we store the texture coordinates, OPCIONAL XD
 
 	Mesh();
 	void clear();
