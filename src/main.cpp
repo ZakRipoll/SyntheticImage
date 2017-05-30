@@ -27,7 +27,7 @@
 
 void buildSceneCornellBox(Camera* &cam, Film* &film,
 	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList, 
-	bool reflect, bool snell)
+	bool reflect, bool snell, bool triangle)
 {
 	/* **************************** */
 	/* Declare and place the camera */
@@ -56,7 +56,8 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	if( snell )
 		transmissive = new Transmisive(1.1, Vector3D(1));
 	else
-		transmissive = new Phong(Vector3D(1, 1, 0.2), Vector3D(1, 1, 0.2), 20);
+		transmissive = new Phong(Vector3D(1, 1, 0.2), Vector3D(1, 1, 0.2), 20);
+
 	/* ******* */
 	/* Objects */
 	/* ******* */
@@ -91,6 +92,12 @@ void buildSceneCornellBox(Camera* &cam, Film* &film,
 	objectsList->push_back(s1);
 	objectsList->push_back(s2);
 	objectsList->push_back(s3);
+
+	if (triangle) {
+		float p = 0.5;
+		Shape *triangle = new Triangle(Vector3D(0.6, -0.6, p), Vector3D(1.4, -0.6, p), Vector3D(1, 0.6, p + 1), mirror);
+		objectsList->push_back(triangle);
+	}
 
 	/* ****** */
 	/* Lights */
@@ -170,7 +177,6 @@ void buildSceneSphere(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsLi
 		objectsList->push_back(bottomPlane);
 	}
 	
-
     /* ****** */
     /* Lights */
     /* ****** */
@@ -229,7 +235,11 @@ int menu() {
 
 	std::cout << "Assignment 3" << std::endl;
 	std::cout << "\t 0: 3.2 Intersection Shader" << std::endl;
-	std::cout << "\t 1: 4.2 Depth Shader" << std::endl;	std::cout << "\t 2: 6.2 Direct Illumination Shader" << std::endl;	std::cout << "Assignment 4" << std::endl;	std::cout << "\t 3: 2 The Infinite Plane Class" << std::endl;
+	std::cout << "\t 1: 4.2 Depth Shader" << std::endl;
+	std::cout << "\t 2: 6.2 Direct Illumination Shader" << std::endl;
+
+	std::cout << "Assignment 4" << std::endl;
+	std::cout << "\t 3: 2 The Infinite Plane Class" << std::endl;
 	std::cout << "\t 4: 2.2 Cornell box" << std::endl;
 	std::cout << "\t 5: 3.2 Mirror material" << std::endl;
 	std::cout << "\t 6: 3.3 Transmissive material" << std::endl;
@@ -238,8 +248,6 @@ int menu() {
 	std::cout << "Assignment 5" << std::endl;
 	std::cout << "\t 8: 3.2 (2-bounces Indirect Illumination)" << std::endl;
 	std::cout << "\t 9: 3.2 (n-bounces Indirect Illumination)" << std::endl;
-
-	std::cout << "10: Compute all assigments" << std::endl;
 
 	std::cout << "\nSelect one option: ";
 
@@ -309,11 +317,14 @@ void executeMenu(int option, Camera* &cam, Shader* &shader, Film* &film,
 		break;
 
 	case 9:
-		int bounces;
+		int bounces,rays;
+		std::cout << "Number of Rays: ";
+		std::cin >> rays;
 		std::cout << "Number of bounces: ";
 		std::cin >> bounces;
+		
 
-		shader = new GlobalShader(bgColor, 10, bounces);
+		shader = new GlobalShader(bgColor, rays, bounces);
 		buildSceneCornellBox(cam, film, objectsList, lightSourceList, 1, 1, 1);
 		fileName = "9 (n-bounces Indirect Illumination";
 		break;
