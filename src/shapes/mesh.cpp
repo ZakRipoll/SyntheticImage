@@ -53,6 +53,19 @@ void Mesh::createPlane(float size)
 	uvs.push_back( Vector2(0,0) );
 }
 */
+void computemaxMinVertex(Vector3D *xyzMin, Vector3D *xyzMax, Vector3D aux) {
+
+	//computexMIn
+	if (xyzMin->x > aux.x) xyzMin->x = aux.x;
+	//computexMAx
+	else if (xyzMax->x < aux.x) xyzMax->x = aux.x;
+	
+	if (xyzMin->y > aux.y) xyzMin->y = aux.y;
+	else if (xyzMax->y < aux.y) xyzMax->y = aux.y;
+
+	if (xyzMin->z > aux.z) xyzMin->z = aux.z;
+	else if (xyzMax->z < aux.z) xyzMax->z = aux.z;
+}
 
 bool Mesh::loadOBJ(const char* filename)
 {
@@ -88,6 +101,8 @@ bool Mesh::loadOBJ(const char* filename)
 
 	unsigned int vertex_i = 0;
 
+	xyzMin = Vector3D (max_float);
+	xyzMax = Vector3D (min_float);
 	//parse file
 	while(*pos != 0)
 	{
@@ -111,7 +126,8 @@ bool Mesh::loadOBJ(const char* filename)
 
 		if (tokens[0] == "v" && tokens.size() == 4)
 		{
-			Vector3D v( atof(tokens[1].c_str()), atof(tokens[2].c_str()), atof(tokens[3].c_str()) );
+			Vector3D v( atof(tokens[1].c_str()), atof(tokens[2].c_str()), -atof(tokens[3].c_str()) );
+			computemaxMinVertex(&xyzMin, &xyzMax, v);
 			indexed_positions.push_back(v);
 		}
 		/*else if (tokens[0] == "vt" && tokens.size() == 4)
@@ -148,9 +164,8 @@ bool Mesh::loadOBJ(const char* filename)
 					indexed_positions[unsigned int(v2.x) - 1],
 					indexed_positions[unsigned int(v3.x) - 1], new Phong( normal que sigui, 50) ) ); //not needed
 				*/
-				//triangles.push_back(new Triangle(&vertices[vertex_i], &vertices[vertex_i+1], &vertices[vertex_i+2]); //not needed
+				triangles.push_back( new Triangle(vertices[vertex_i], vertices[vertex_i+1], vertices[vertex_i+2], material) ); //not needed
 
-				
 				vertex_i += 3;
 
 				/*if (indexed_uvs.size() > 0)
@@ -170,6 +185,9 @@ bool Mesh::loadOBJ(const char* filename)
 			}
 		}
 	}
+
+	center = (xyzMax + xyzMin) * 0.5;
+	halfSize = xyzMax - center;
 
 	delete data;
 

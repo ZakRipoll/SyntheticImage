@@ -9,20 +9,25 @@
 #include <iostream>
 #include "../core/vector3d.h"
 #include "triangle.h"
+#include "../materials/phong.h"
 
 class Mesh
 {
 public:
 	std::vector< Vector3D > vertices;	//here we store the vertices
 	std::vector< Vector3D > normals;	//here we store the normals
-	std::vector< Shape > triangles;	//here we store the triangles
+	std::vector< Shape*> triangles;	//here we store the triangles
 	//std::vector< Vector2 > uvs;		//here we store the texture coordinates, OPCIONAL XD
 
 	Mesh();
 	void clear();
 
-	void createPlane(float size);
+	//void createPlane(float size);
 	bool loadOBJ(const char* filename);
+
+	Material* material = new Phong(Vector3D(0.2, 0.7, 0.3), 50);
+	Vector3D xyzMin, xyzMax;
+	Vector3D center, halfSize;
 };
 
 

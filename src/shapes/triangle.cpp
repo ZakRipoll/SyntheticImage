@@ -10,7 +10,6 @@ Triangle::Triangle(const Vector3D a_, const Vector3D b_, const Vector3D c_, Mate
 }
 
 
-
 Vector3D Triangle::getNormalWorld(const Vector3D & pt_world) const
 {
 	return nWorld;
