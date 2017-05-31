@@ -188,7 +188,11 @@ bool Mesh::loadOBJ(const char* filename)
 
 	center = (xyzMax + xyzMin) * 0.5;
 	halfSize = xyzMax - center;
-
+	
+	Material *pink_50 = new Phong(Vector3D(.976, .062, .843), 50);
+	Matrix4x4 sphereTransform;
+	sphereTransform = sphereTransform.translate(center);
+	sphereBBox = new Sphere(halfSize.length(),sphereTransform,pink_50);
 	delete data;
 
 	return true;

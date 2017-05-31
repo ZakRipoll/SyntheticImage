@@ -10,6 +10,7 @@
 #include "../core/vector3d.h"
 #include "triangle.h"
 #include "../materials/phong.h"
+#include "../shapes/sphere.h"
 
 class Mesh
 {
@@ -28,6 +29,7 @@ public:
 	Material* material = new Phong(Vector3D(0.2, 0.7, 0.3), 50);
 	Vector3D xyzMin, xyzMax;
 	Vector3D center, halfSize;
+	Sphere * sphereBBox;
 };
 
 

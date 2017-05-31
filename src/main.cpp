@@ -400,6 +400,8 @@ int main()
 	mesh->loadOBJ("lee.obj");
 
 	objectsList = &mesh->triangles;
+	//objectsList = new std::vector<Shape*>();
+	//objectsList->push_back(mesh->sphereBBox);
 
 	buildOurScene(cam, film, lightSourceList);
 
