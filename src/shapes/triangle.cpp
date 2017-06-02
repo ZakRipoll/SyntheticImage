@@ -33,9 +33,7 @@ bool Triangle::rayIntersect(const Ray & ray, Intersection & its) const
 
 	if (dot(cross(vbc, (phit - bWorld)), nWorld) > 0) return false; 
 
-
 	if (dot(cross(vca, (phit - cWorld)), nWorld) > 0) return false;
-
 
 	// Fill the intersection details
 	its.itsPoint = phit;

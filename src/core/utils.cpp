@@ -50,7 +50,7 @@ bool Utils::getClosestIntersection(const Ray &cameraRay, const std::vector<Shape
 		colision |= obj->rayIntersect(cameraRay, its);
 
 		#if DEBUG
-			if( colision ) std::cout << "Triangle hit" << std::endl;
+			if(its) std::cout << "Triangle hit" << std::endl;
 		#endif
 	}
     return colision;

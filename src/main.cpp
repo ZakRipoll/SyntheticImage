@@ -199,9 +199,11 @@ void buildOurScene(Camera* &cam, Film* &film, std::vector<PointLightSource>* &li
 	/* **************************** */
 	/* Declare and place the camera */
 	/* **************************** */
-	Matrix4x4 cameraToWorld = Matrix4x4::translate( cameraPosition);
+	Matrix4x4 cameraToWorld = Matrix4x4::translate(cameraPosition);
+
 	double fovDegrees = 60; //Aquí també hi ha alguna feina a fer.
 	double fovRadians = Utils::degreesToRadians(fovDegrees);
+
 	cam = new PerspectiveCamera(cameraToWorld, fovRadians, *film);
 
 	double offset = 3.0;
@@ -209,14 +211,19 @@ void buildOurScene(Camera* &cam, Film* &film, std::vector<PointLightSource>* &li
 	/* ****** */
 	/* Lights */
 	/* ****** */
+
 	lightSourceList = new std::vector<PointLightSource>;
+
 	Vector3D lightPosition1 = Vector3D(0, offset - 1, 2 * offset);
 	Vector3D lightPosition2 = Vector3D(0, offset - 1, 0);
 	Vector3D lightPosition3 = Vector3D(0, offset - 1, offset);
+
 	Vector3D intensity = Vector3D(5, 5, 5); // Radiant intensity (watts/sr)
+
 	PointLightSource pointLS1(lightPosition1, intensity);
 	PointLightSource pointLS2(lightPosition2, intensity);
 	PointLightSource pointLS3(lightPosition3, intensity);
+
 	lightSourceList->push_back(pointLS1);
 	lightSourceList->push_back(pointLS2);
 	lightSourceList->push_back(pointLS3);
@@ -257,119 +264,6 @@ void raytrace(Camera* &cam, Shader* &shader, Film* &film,
     }
 }
 
-int menu() {
-
-	int option;
-
-	std::cout << "Menu" << std::endl;
-
-	std::cout << "Assignment 3" << std::endl;
-	std::cout << "\t 0: 3.2 Intersection Shader" << std::endl;
-	std::cout << "\t 1: 4.2 Depth Shader" << std::endl;
-	std::cout << "\t 2: 6.2 Direct Illumination Shader" << std::endl;
-
-	std::cout << "Assignment 4" << std::endl;
-	std::cout << "\t 3: 2 The Infinite Plane Class" << std::endl;
-	std::cout << "\t 4: 2.2 Cornell box" << std::endl;
-	std::cout << "\t 5: 3.2 Mirror material" << std::endl;
-	std::cout << "\t 6: 3.3 Transmissive material" << std::endl;
-	std::cout << "\t 7: 3.4 Ray triangle" << std::endl;
-
-	std::cout << "Assignment 5" << std::endl;
-	std::cout << "\t 8: 3.2 (2-bounces Indirect Illumination)" << std::endl;
-	std::cout << "\t 9: 3.2 (n-bounces Indirect Illumination)" << std::endl;
-
-	std::cout << "\nSelect one option: ";
-
-	std::cin >> option;
-
-	return option;
-}
-
-void executeMenu(int option, Camera* &cam, Shader* &shader, Film* &film,
-	std::vector<Shape*>* &objectsList, std::vector<PointLightSource>* &lightSourceList, 
-	Vector3D bgColor, Vector3D intersectionColor, std::string &fileName) {
-
-	switch (option) {
-
-	case 0:
-		shader = new IntersectionShader(intersectionColor, bgColor);
-		buildSceneSphere(cam, film, objectsList, lightSourceList, 0, 0);
-		fileName = "0 Intersection Shader";
-		break;
-
-	case 1:
-		shader = new DepthShader(Vector3D(.4, 1, .4), 8, bgColor);
-		buildSceneSphere(cam, film, objectsList, lightSourceList, 0, 0);
-		fileName = "1 Depth Shader";
-		break;
-
-	case 2:
-		shader = new DirectShader(bgColor);
-		buildSceneSphere(cam, film, objectsList, lightSourceList, 0, 0);
-		fileName = "2 Direct Illumination Shader";
-		break;
-
-	case 3:
-		shader = new DirectShader(bgColor);
-		buildSceneSphere(cam, film, objectsList, lightSourceList, 1, 0);
-		fileName = "3 The Infinite Plane Class";
-		break;
-
-	case 4:
-		shader = new DirectShader(bgColor);
-		buildSceneCornellBox(cam, film, objectsList, lightSourceList, 0, 0, 0);
-		fileName = "4 Cornell box";
-		break;
-
-	case 5:
-		shader = new DirectShader(bgColor);
-		buildSceneCornellBox(cam, film, objectsList, lightSourceList, 1, 0, 0);
-		fileName = "5 Mirror material";
-		break;
-
-	case 6:
-		shader = new DirectShader(bgColor);
-		buildSceneCornellBox(cam, film, objectsList, lightSourceList, 1, 1, 0);
-		fileName = "6 Transmissive material";
-		break;
-
-	case 7:
-		shader = new DirectShader(bgColor);
-		buildSceneCornellBox(cam, film, objectsList, lightSourceList, 1, 1, 1);
-		fileName = "7 Ray triangle";
-		break;
-
-	case 8:
-		int raynum;
-		std::cout << "Number of Rays: ";
-		std::cin >> raynum;
-		shader = new GlobalShader(bgColor, raynum, 2);
-		buildSceneCornellBox(cam, film, objectsList, lightSourceList, 1, 1, 1);
-		fileName = "8 (2-bounces Indirect Illumination";
-		break;
-
-	case 9:
-		int bounces,rays;
-		std::cout << "Number of Rays: ";
-		std::cin >> rays;
-		std::cout << "Number of bounces: ";
-		std::cin >> bounces;
-		
-
-		shader = new GlobalShader(bgColor, rays, bounces);
-		buildSceneCornellBox(cam, film, objectsList, lightSourceList, 1, 1, 1);
-		fileName = "9 (n-bounces Indirect Illumination";
-		break;
-
-	default:
-		exit(0);
-	}
-	
-
-	fileName += ".bmp";
-}
-
 int main()
 {
     std::string separator     = "\n----------------------------------------------\n";
@@ -384,8 +278,6 @@ int main()
 	string fileName = "./output.bmp";
 
     // Declare the shader
-    Vector3D bgColor(0.0, 0.0, 0.0); // Background color (for rays which do not intersect anything)
-    Vector3D intersectionColor(1,0,0);
 	Shader *shader;
 
 	// Declare pointers to all the variables which describe the scene
@@ -393,21 +285,20 @@ int main()
 	std::vector<Shape*> *objectsList;
 	std::vector<PointLightSource> *lightSourceList;
 
-	//executeMenu(menu(), cam, shader, film, objectsList, lightSourceList, bgColor, intersectionColor, fileName);
-
 	Mesh* mesh = new Mesh();
 	
 	mesh->loadOBJ("lee.obj");
 
-	if (!0) {
+	if (0) {
 		objectsList = &mesh->triangles;
-		//objectsList->push_back(mesh->sphereBBox);
+		objectsList->push_back(mesh->sphereBBox);
 	}
 	else {
 		objectsList = new std::vector<Shape*>();
 		objectsList->push_back(mesh->sphereBBox);
 	}
-	buildOurScene(cam, film, lightSourceList, Vector3D( mesh->center.x, mesh->center.y, -mesh->halfSize.length() ) );
+
+	buildOurScene(cam, film, lightSourceList, Vector3D( mesh->center.x, mesh->center.y, -mesh->halfSize.length() * 2 ) );
 
 	shader = new NormalShader();
 
