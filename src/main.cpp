@@ -194,13 +194,13 @@ void buildSceneSphere(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsLi
 	lightSourceList->push_back(right);
 }
 
-void buildOurScene(Camera* &cam, Film* &film, std::vector<PointLightSource>* &lightSourceList)
+void buildOurScene(Camera* &cam, Film* &film, std::vector<PointLightSource>* &lightSourceList, Vector3D cameraPosition)
 {
 	/* **************************** */
 	/* Declare and place the camera */
 	/* **************************** */
-	Matrix4x4 cameraToWorld = Matrix4x4::translate(Vector3D(0, 10, -50));
-	double fovDegrees = 60;
+	Matrix4x4 cameraToWorld = Matrix4x4::translate( cameraPosition);
+	double fovDegrees = 60; //Aquí també hi ha alguna feina a fer.
 	double fovRadians = Utils::degreesToRadians(fovDegrees);
 	cam = new PerspectiveCamera(cameraToWorld, fovRadians, *film);
 
@@ -403,7 +403,7 @@ int main()
 	//objectsList = new std::vector<Shape*>();
 	//objectsList->push_back(mesh->sphereBBox);
 
-	buildOurScene(cam, film, lightSourceList);
+	buildOurScene(cam, film, lightSourceList, Vector3D( mesh->center.x, mesh->center.y, -mesh->halfSize.length() ) );
 
 	shader = new NormalShader();
 
