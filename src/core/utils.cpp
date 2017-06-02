@@ -28,12 +28,30 @@ bool Utils::hasIntersection(const Ray &ray, const std::vector<Shape*> &objectsLi
 bool Utils::getClosestIntersection(const Ray &cameraRay, const std::vector<Shape*> &objectsList, Intersection &its)
 {
 	bool colision = false;
+
+	int iterations = objectsList.size();
+
+	if (0){
+		const Shape *obj = objectsList.back();
+
+		int max = cameraRay.maxT;
+
+		if (!obj->rayIntersectP(cameraRay)) return false;
+
+		cameraRay.maxT = max;
+
+		iterations--;
+	}
 	 
-	for (size_t objindex = 0; objindex < objectsList.size(); objindex++)
+	for (size_t objindex = 0; objindex < iterations; objindex++)
 	{
 		const Shape *obj = objectsList.at(objindex);
 
 		colision |= obj->rayIntersect(cameraRay, its);
+
+		#if DEBUG
+			if( colision ) std::cout << "Triangle hit" << std::endl;
+		#endif
 	}
     return colision;
 }
