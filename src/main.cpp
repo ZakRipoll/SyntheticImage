@@ -289,16 +289,10 @@ int main()
 	
 	mesh->loadOBJ("lee.obj");
 
-	if (0) {
-		objectsList = &mesh->triangles;
-		objectsList->push_back(mesh->sphereBBox);
-	}
-	else {
-		objectsList = new std::vector<Shape*>();
-		objectsList->push_back(mesh->sphereBBox);
-	}
+	objectsList = &mesh->triangles;
+	objectsList->push_back(mesh->sphereBBox);
 
-	buildOurScene(cam, film, lightSourceList, Vector3D( mesh->center.x, mesh->center.y, -mesh->halfSize.length() * 2 ) );
+	buildOurScene(cam, film, lightSourceList, Vector3D( mesh->center.x, mesh->center.y, -mesh->halfSize.length() * 2) );
 
 	shader = new NormalShader();
 

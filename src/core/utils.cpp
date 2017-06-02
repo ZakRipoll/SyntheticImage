@@ -29,29 +29,17 @@ bool Utils::getClosestIntersection(const Ray &cameraRay, const std::vector<Shape
 {
 	bool colision = false;
 
-	int iterations = objectsList.size();
+	const Shape *obj = objectsList.back();
 
-	if (0){
-		const Shape *obj = objectsList.back();
+	if (!obj->rayIntersectP(cameraRay)) return false;
 
-		int max = cameraRay.maxT;
-
-		if (!obj->rayIntersectP(cameraRay)) return false;
-
-		cameraRay.maxT = max;
-
-		iterations--;
-	}
+	cameraRay.maxT = INFINITY;
 	 
-	for (size_t objindex = 0; objindex < iterations; objindex++)
+	for (size_t objindex = 0; objindex < objectsList.size() - 1; objindex++)
 	{
 		const Shape *obj = objectsList.at(objindex);
 
 		colision |= obj->rayIntersect(cameraRay, its);
-
-		#if DEBUG
-			if(its) std::cout << "Triangle hit" << std::endl;
-		#endif
 	}
     return colision;
 }
