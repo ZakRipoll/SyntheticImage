@@ -17,6 +17,7 @@ Mesh::Mesh(const char* name_, Material *material_) : Shape(Matrix4x4(), material
 void Mesh::clear()
 {
 	vertices.clear();
+	normals.clear();
 }
 
 void computemaxMinVertex(Vector3D *xyzMin, Vector3D *xyzMax, Vector3D aux) {
@@ -92,7 +93,7 @@ bool Mesh::loadOBJ(const char* filename)
 
 		if (tokens[0] == "v" && tokens.size() == 4)
 		{
-			Vector3D v( atof(tokens[1].c_str()), atof(tokens[2].c_str()), atof(tokens[3].c_str()) );
+			Vector3D v( atof(tokens[1].c_str()), atof(tokens[2].c_str()), -atof(tokens[3].c_str()) );
 			computemaxMinVertex(&xyzMin, &xyzMax, v);
 			indexed_positions.push_back(v);
 		}
@@ -122,7 +123,7 @@ bool Mesh::loadOBJ(const char* filename)
 				v2 = parseVector3( tokens[iPoly].c_str(), '/' );
 				v3 = parseVector3( tokens[iPoly+1].c_str(), '/' );
 
-				vertices.push_back( indexed_positions[ unsigned int(v1.x) -1 ] );
+				vertices.push_back( indexed_positions[ unsigned int(v1.x) -1] );
 				vertices.push_back( indexed_positions[ unsigned int(v2.x) -1] );
 				vertices.push_back( indexed_positions[ unsigned int(v3.x) -1] );
 
@@ -154,7 +155,6 @@ bool Mesh::loadOBJ(const char* filename)
 
 	center = (xyzMax + xyzMin) * 0.5;
 	halfSize = xyzMax - center;
-
 	Material *pink_50 = new Phong(Vector3D(.976, .062, .843), 50);
 	Matrix4x4 sphereTransform;
 	sphereTransform = sphereTransform.translate(center);
@@ -251,10 +251,9 @@ bool Mesh::rayIntersect(const Ray &ray, Intersection &its) const
 {
 	if (sphereBBox->rayIntersectP(ray)) {
 		for (int objindex = 0; objindex < triangles.size(); objindex++) {
-			bool firsthit = triangles.at(objindex)->rayIntersectP(ray);
-			if (firsthit) {
-				bool golpea = triangles.at(objindex)->rayIntersect(ray, its);
-				return golpea;
+			const Shape * obj = triangles.at(objindex);
+			if (obj->rayIntersectP(ray)) {
+				if (obj->rayIntersect(ray, its)) return true;
 			}
 		}
 	}
@@ -264,9 +263,9 @@ bool Mesh::rayIntersect(const Ray &ray, Intersection &its) const
 bool Mesh::rayIntersectP(const Ray &ray) const
 {
 	if (sphereBBox->rayIntersectP(ray)) {
-		
 		for (int objindex = 0; objindex < triangles.size(); objindex++) {
-			return triangles.at(objindex)->rayIntersectP(ray);
+			const Shape * obj = triangles.at(objindex);
+			if(obj->rayIntersectP(ray)) return true;
 		}
 	}
 	return false;

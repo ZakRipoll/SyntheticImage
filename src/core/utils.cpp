@@ -36,16 +36,14 @@ bool Utils::hasSphereIntersection(const Ray &ray, Sphere* sphere)
 }
 
 bool Utils::getClosestIntersection(const Ray &cameraRay, const std::vector<Shape*> &objectsList, Intersection &its)
-{
-	bool colision = false;
-	 
+{	 
 	for (size_t objindex = 0; objindex < objectsList.size(); objindex++)
 	{
 		const Shape *obj = objectsList.at(objindex);
 
-		colision |= obj->rayIntersect(cameraRay, its);
+		if (obj->rayIntersect(cameraRay, its)) return true;
 	}
-    return colision;
+    return false;
 }
 
 double interpolate(double val, double y0, double x0, double y1, double x1 )

@@ -26,12 +26,11 @@ public:
 	virtual bool rayIntersectP(const Ray &ray) const;
 
 	std::vector< Vector3D > vertices;
-	//std::vector<Vector3D> normals;
+	std::vector<Vector3D> normals;
 	std::vector< Shape*> triangles;
 	Vector3D xyzMin, xyzMax;
 	Vector3D center, halfSize;
 	Sphere * sphereBBox;					
-	
 };
 
 

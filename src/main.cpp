@@ -203,8 +203,9 @@ void buildOurScene(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsList 
 	double fovDegrees = 60;
 	double fovRadians = Utils::degreesToRadians(fovDegrees);
 	cam = new PerspectiveCamera(cameraToWorld, fovRadians, *film);
+	
 	objectsList = new std::vector<Shape*>;
-	double offset = 3.0;
+	double offset = 5.0;
 
 	/* OIBJECTS*/
 	Material* meshMaterial = new Phong(Vector3D(0.2, 0.7, 0.3), 50);
@@ -215,16 +216,16 @@ void buildOurScene(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsList 
 	/* Lights */
 	/* ****** */
 	lightSourceList = new std::vector<PointLightSource>;
-	Vector3D lightPosition1 = Vector3D(0, offset - 1, 2 * offset);
-	Vector3D lightPosition2 = Vector3D(0, offset - 1, 0);
-	Vector3D lightPosition3 = Vector3D(0, offset - 1, offset);
-	Vector3D intensity = Vector3D(5, 5, 5); // Radiant intensity (watts/sr)
+	Vector3D lightPosition1 = Vector3D(0, offset + 10, 10 * offset);
+	//Vector3D lightPosition2 = Vector3D(0, offset - 1, 0);
+	//Vector3D lightPosition3 = Vector3D(0, offset - 1, offset);
+	Vector3D intensity = Vector3D(100); // Radiant intensity (watts/sr)
 	PointLightSource pointLS1(lightPosition1, intensity);
-	PointLightSource pointLS2(lightPosition2, intensity);
-	PointLightSource pointLS3(lightPosition3, intensity);
+	//PointLightSource pointLS2(lightPosition2, intensity);
+	//PointLightSource pointLS3(lightPosition3, intensity);
 	lightSourceList->push_back(pointLS1);
-	lightSourceList->push_back(pointLS2);
-	lightSourceList->push_back(pointLS3);
+	//lightSourceList->push_back(pointLS2);
+	//lightSourceList->push_back(pointLS3);
 }
 
 void raytrace(Camera* &cam, Shader* &shader, Film* &film,
@@ -236,6 +237,7 @@ void raytrace(Camera* &cam, Shader* &shader, Film* &film,
     size_t resY = film->getHeight();
     // Main raytracing loop
     // Out-most loop invariant: we have rendered lin lines
+	int red = 0 ; 
     for(size_t lin=0; lin<resY; lin++)
     {
         // Show progression
@@ -255,10 +257,14 @@ void raytrace(Camera* &cam, Shader* &shader, Film* &film,
 			Vector3D pixelColor = Vector3D(0);
             //Compute ray color according to the used shader
 			pixelColor = shader->computeColor(cameraRay, *objectsList, *lightSourceList);
+			if (pixelColor.x != 1 && pixelColor.y != 0 && pixelColor.z != 0) red++;
 			// Store the pixel color
-			film->setPixelValue(col, lin, pixelColor);    
+			film->setPixelValue(col, lin, pixelColor);
+
         }
     }
+	std::cout << "No Background --> " << red << std::endl;
+	std::cin >> red;
 }
 
 int menu() {
@@ -401,7 +407,8 @@ int main()
 
 	buildOurScene(cam, film,objectsList,lightSourceList);
 
-	shader = new NormalShader();
+	//shader = new NormalShader();
+	shader = new DirectShader(Vector3D(0));
 	//shader = new IntersectionShader(Vector3D(1, 0, 0), bgColor);
 
 	// Launch some rays!

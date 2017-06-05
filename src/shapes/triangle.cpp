@@ -28,12 +28,12 @@ bool Triangle::rayIntersect(const Ray & ray, Intersection & its) const
 	Vector3D phit = ray.o + ray.d * tHit;
 
 	//Infinite Plane
+	double comp = 0.0;
+	if (dot(cross(vab, (phit - aWorld)), nWorld) > comp) return false;
 
-	if (dot(cross(vab, (phit - aWorld)), nWorld) > 0) return false; 
+	if (dot(cross(vbc, (phit - bWorld)), nWorld) > comp) return false;
 
-	if (dot(cross(vbc, (phit - bWorld)), nWorld) > 0) return false; 
-
-	if (dot(cross(vca, (phit - cWorld)), nWorld) > 0) return false;
+	if (dot(cross(vca, (phit - cWorld)), nWorld) > comp) return false;
 
 
 	// Fill the intersection details
@@ -60,11 +60,12 @@ bool Triangle::rayIntersectP(const Ray & ray) const
 	Vector3D phit = ray.o + ray.d * tHit;
 
 	//Infinite Plane
-	if (dot(cross(vab, (phit - aWorld)), nWorld) > 0) return false;
+	double comp = 0.0;
+	if (dot(cross(vab, (phit - aWorld)), nWorld) > comp) return false;
 
-	if (dot(cross(vbc, (phit - bWorld)), nWorld) > 0) return false;
+	if (dot(cross(vbc, (phit - bWorld)), nWorld) > comp) return false;
 
-	if (dot(cross(vca, (phit - cWorld)), nWorld) > 0) return false;
+	if (dot(cross(vca, (phit - cWorld)), nWorld) > comp) return false;
 
 	return true;
 }
