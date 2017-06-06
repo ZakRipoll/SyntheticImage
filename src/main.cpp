@@ -196,30 +196,61 @@ void buildSceneSphere(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsLi
 
 void buildOurScene(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsList ,std::vector<PointLightSource>* &lightSourceList)
 {
+	objectsList = new std::vector<Shape*>;
+	/* OIBJECTS*/
+	Material* meshMaterial = new Phong(Vector3D(0.2, 0.7, 0.3), 50);
+	Shape* mesh = new Mesh("lee.obj", meshMaterial);
+	objectsList->push_back(mesh);
+
+	Mesh * m = (Mesh*)mesh;
 	/* **************************** */
 	/* Declare and place the camera */
 	/* **************************** */
-	Matrix4x4 cameraToWorld = Matrix4x4::translate(Vector3D(0, 10, -50));
+	Matrix4x4 cameraToWorld = Matrix4x4::translate(Vector3D(m->center.x, m->center.y, -m->halfSize.length()));
 	double fovDegrees = 60;
 	double fovRadians = Utils::degreesToRadians(fovDegrees);
 	cam = new PerspectiveCamera(cameraToWorld, fovRadians, *film);
 	
-	objectsList = new std::vector<Shape*>;
-	double offset = 5.0;
+	
+	double offset = 50;
 
-	/* OIBJECTS*/
-	Material* meshMaterial = new Phong(Vector3D(0.2, 0.7, 0.3), 50);
-	Shape* mesh = new Mesh("lee.obj",meshMaterial);
-	objectsList->push_back(mesh);
+	/* ********* */
+	/* Materials */
+	/* ********* */
+	Material *redDiffuse = new Phong(Vector3D(0.7, 0.2, 0.3), Vector3D(0, 0, 0), 100);
+	Material *greenDiffuse = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0, 0, 0), 100);
+	Material *greyDiffuse = new Phong(Vector3D(0.8, 0.8, 0.8), Vector3D(0, 0, 0), 100);
+	Material *blueDiffuse = new Phong(Vector3D(0.3, 0.2, 0.7), Vector3D(0, 0, 0), 100);
+	Material *red_100 = new Phong(Vector3D(0.7, 0.2, 0.3), Vector3D(0.7, 0.7, 0.2), 100);
+
+	// Construct the Cornell Box
+	Shape *leftPlan = new InfinitePlane(Vector3D(-offset, 0, 0), Vector3D(1, 0, 0), redDiffuse);
+	Shape *rightPlan = new InfinitePlane(Vector3D(offset, 0, 0), Vector3D(-1, 0, 0), greenDiffuse);
+	Shape *topPlan = new InfinitePlane(Vector3D(0, offset, 0), Vector3D(0, -1, 0), greyDiffuse);
+	Shape *bottomPlan = new InfinitePlane(Vector3D(0, -offset, 0), Vector3D(0, 1, 0), greyDiffuse);
+	Shape *backPlan = new InfinitePlane(Vector3D(0, 0, 3 * offset), Vector3D(0, 0, -1), blueDiffuse);
+
+	objectsList->push_back(leftPlan);
+	objectsList->push_back(rightPlan);
+	objectsList->push_back(topPlan);
+	objectsList->push_back(bottomPlan);
+	objectsList->push_back(backPlan);
+
+	// Place the Spheres inside the Cornell Box
+	Material * mirror = new Mirror(Vector3D(1, 0.9, 0.85));
+	//Matrix4x4 sphereTransform1;
+	//double radius = 1;
+	//sphereTransform1 = Matrix4x4::translate(Vector3D(-offset + radius, -offset + radius, 3.5));
+	//Shape *s1 = new Sphere(1.5, sphereTransform1, mirror);
 
 	/* ****** */
 	/* Lights */
 	/* ****** */
 	lightSourceList = new std::vector<PointLightSource>;
-	Vector3D lightPosition1 = Vector3D(5, 10, -35);
-	Vector3D lightPosition2 = Vector3D(-5,10 , -35);
-	Vector3D lightPosition3 = Vector3D(0, 0, -35);
-	Vector3D intensity = Vector3D(500); // Radiant intensity (watts/sr)
+	Vector3D lightPosition1 = Vector3D(offset - 10, 10, -35);
+	Vector3D lightPosition2 = Vector3D(-offset + 10, 10 , -35);
+	Vector3D lightPosition3 = Vector3D(0, 0, offset - 10);
+	Vector3D intensity = Vector3D(3000); // Radiant intensity (watts/sr)
 	PointLightSource pointLS1(lightPosition1, intensity);
 	PointLightSource pointLS2(lightPosition2, intensity);
 	PointLightSource pointLS3(lightPosition3, intensity);

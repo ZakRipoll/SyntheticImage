@@ -11,6 +11,7 @@ Vector3D parseVector3(const char* text, const char separator);
 
 Mesh::Mesh(const char* name_, Material *material_) : Shape(Matrix4x4(), material_){
 	loadOBJ(name_);
+	createBoundingBox();
 }
 
 
@@ -274,6 +275,30 @@ bool Mesh::loadOBJ(const char* filename)
 
 	return true;
 }
+void Mesh::createBoundingBox()
+{
+	Vector3D x1(xyzMin.x, xyzMin.y, xyzMin.z);
+	Vector3D x2(xyzMax.x, xyzMin.y, xyzMin.z);
+	Vector3D x3(xyzMax.x, xyzMax.y, xyzMin.z);
+	Vector3D x4(xyzMin.x, xyzMax.y, xyzMin.z);
+	Vector3D x5(xyzMin.x, xyzMin.y, xyzMax.z);
+	Vector3D x6(xyzMax.x, xyzMin.y, xyzMax.z);
+	Vector3D x7(xyzMax.x, xyzMax.y, xyzMax.z);
+	Vector3D x8(xyzMin.x, xyzMax.y, xyzMax.z);
+
+	boundingBox.push_back(new Triangle(x1, x2, x3, material));
+	boundingBox.push_back(new Triangle(x1, x3, x4, material));
+	boundingBox.push_back(new Triangle(x2, x6, x7, material));
+	boundingBox.push_back(new Triangle(x2, x7, x3, material));
+	boundingBox.push_back(new Triangle(x6, x5, x8, material));
+	boundingBox.push_back(new Triangle(x6, x8, x7, material));
+	boundingBox.push_back(new Triangle(x5, x1, x4, material));
+	boundingBox.push_back(new Triangle(x5, x4, x8, material));
+	boundingBox.push_back(new Triangle(x4, x3, x7, material));
+	boundingBox.push_back(new Triangle(x4, x7, x8, material));
+	boundingBox.push_back(new Triangle(x5, x6, x2, material));
+	boundingBox.push_back(new Triangle(x5, x2, x1, material));
+}
 std::vector<std::string> tokenize(const std::string& source, const char* delimiters, bool process_strings )
 {
 	std::vector<std::string> tokens;
@@ -325,6 +350,7 @@ std::vector<std::string> tokenize(const std::string& source, const char* delimit
 		tokens.push_back(str);
 	return tokens;
 }
+
 Vector3D parseVector3(const char* text, const char separator)
 {
 	int pos = 0;
@@ -361,7 +387,7 @@ Vector3D parseVector3(const char* text, const char separator)
 bool Mesh::rayIntersect(const Ray &ray, Intersection &its) const
 {
 	bool collide = false;
-	if (sphereBBox->rayIntersectP(ray)) {
+	if (Utils::hasIntersection(ray, boundingBox)) {
 		for (int objindex = 0; objindex < triangles.size(); objindex++) {
 			const Shape * obj = triangles.at(objindex);
 			collide |= obj->rayIntersect(ray, its);
@@ -372,7 +398,7 @@ bool Mesh::rayIntersect(const Ray &ray, Intersection &its) const
 
 bool Mesh::rayIntersectP(const Ray &ray) const
 {
-	if (sphereBBox->rayIntersectP(ray)) {
+	if (Utils::hasIntersection( ray, boundingBox ) ) {
 		for (int objindex = 0; objindex < triangles.size(); objindex++) {
 			const Shape * obj = triangles.at(objindex);
 			if(obj->rayIntersectP(ray)) return true;

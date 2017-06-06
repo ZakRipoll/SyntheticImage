@@ -22,6 +22,7 @@ public:
 	
 	void clear();
 	bool loadOBJ(const char* filename);
+	void createBoundingBox();
 	virtual bool rayIntersect(const Ray &ray, Intersection &its) const;
 	virtual bool rayIntersectP(const Ray &ray) const;
 
@@ -30,7 +31,8 @@ public:
 	std::vector< Shape*> triangles;
 	Vector3D xyzMin, xyzMax;
 	Vector3D center, halfSize;
-	Sphere * sphereBBox;					
+	Sphere * sphereBBox;
+	std::vector<Shape *> boundingBox;
 };
 
 
