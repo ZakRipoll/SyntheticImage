@@ -199,7 +199,7 @@ void buildOurScene(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsList 
 	/* **************************** */
 	/* Declare and place the camera */
 	/* **************************** */
-	Matrix4x4 cameraToWorld = Matrix4x4::translate(Vector3D(0, 10, -50));
+	Matrix4x4 cameraToWorld = Matrix4x4::translate(Vector3D(0, 800, -1500));
 	double fovDegrees = 60;
 	double fovRadians = Utils::degreesToRadians(fovDegrees);
 	cam = new PerspectiveCamera(cameraToWorld, fovRadians, *film);
@@ -209,7 +209,7 @@ void buildOurScene(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsList 
 
 	/* OIBJECTS*/
 	Material* meshMaterial = new Phong(Vector3D(0.2, 0.7, 0.3), 50);
-	Shape* mesh = new Mesh("lee.obj",meshMaterial);
+	Shape* mesh = new Mesh("deer.obj",meshMaterial);
 	objectsList->push_back(mesh);
 
 	/* ****** */
@@ -257,14 +257,14 @@ void raytrace(Camera* &cam, Shader* &shader, Film* &film,
 			Vector3D pixelColor = Vector3D(0);
             //Compute ray color according to the used shader
 			pixelColor = shader->computeColor(cameraRay, *objectsList, *lightSourceList);
-			if (pixelColor.x != 1 && pixelColor.y != 0 && pixelColor.z != 0) red++;
+			//if (pixelColor.x != 0 && pixelColor.y != 0 && pixelColor.z != 0) red++;
 			// Store the pixel color
 			film->setPixelValue(col, lin, pixelColor);
 
         }
     }
-	std::cout << "No Background --> " << red << std::endl;
-	std::cin >> red;
+	//std::cout << "No Background --> " << red << std::endl;
+	//std::cin >> red;
 }
 
 int menu() {
@@ -407,8 +407,8 @@ int main()
 
 	buildOurScene(cam, film,objectsList,lightSourceList);
 
-	//shader = new NormalShader();
-	shader = new DirectShader(Vector3D(0));
+	shader = new NormalShader();
+	//shader = new DirectShader(Vector3D(0));
 	//shader = new IntersectionShader(Vector3D(1, 0, 0), bgColor);
 
 	// Launch some rays!

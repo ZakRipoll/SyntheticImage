@@ -26,15 +26,6 @@ bool Utils::hasIntersection(const Ray &ray, const std::vector<Shape*> &objectsLi
     return false;
 }
 
-bool Utils::hasSphereIntersection(const Ray &ray, Sphere* sphere)
-{
-	if (sphere->rayIntersectP(ray)) {
-		ray.maxT = 100000000000;
-		return true;
-	}
-	return false;
-}
-
 bool Utils::getClosestIntersection(const Ray &cameraRay, const std::vector<Shape*> &objectsList, Intersection &its)
 {	 
 	for (size_t objindex = 0; objindex < objectsList.size(); objindex++)

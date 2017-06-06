@@ -34,7 +34,8 @@ void computemaxMinVertex(Vector3D *xyzMin, Vector3D *xyzMax, Vector3D aux) {
 	else if (xyzMax->z < aux.z) xyzMax->z = aux.z;
 }
 
-bool Mesh::loadOBJ(const char* filename)
+
+/*bool Mesh::loadOBJ(const char* filename)
 {
 	struct stat stbuffer;
 
@@ -101,18 +102,13 @@ bool Mesh::loadOBJ(const char* filename)
 		{
 			Vector2 v( atof(tokens[1].c_str()), atof(tokens[2].c_str()) );
 			indexed_uvs.push_back(v);
-		}*/
+		}
 		else if (tokens[0] == "vn" && tokens.size() == 4)
 		{
 			Vector3D v( atof(tokens[1].c_str()), atof(tokens[2].c_str()), atof(tokens[3].c_str()) );
 			indexed_normals.push_back(v);
 		}
-		/*else if (tokens[0] == "s") //surface? it appears one time before the faces ????????????????????????
-		{
-			//process mesh
-			if (uvs.size() == 0 && indexed_uvs.size() )
-				uvs.resize(1);
-		}*/
+	
 		else if (tokens[0] == "f" && tokens.size() >= 4)
 		{
 			Vector3D v1,v2,v3;
@@ -130,25 +126,9 @@ bool Mesh::loadOBJ(const char* filename)
 				/*triangles.push_back(new Triangle( indexed_positions[unsigned int(v1.x) - 1], 
 					indexed_positions[unsigned int(v2.x) - 1],
 					indexed_positions[unsigned int(v3.x) - 1], new Phong( normal que sigui, 50) ) ); //not needed
-				*/
-				triangles.push_back( new Triangle(vertices[vertex_i], vertices[vertex_i+1], vertices[vertex_i+2], material)); //not needed
-
+				
+				triangles.push_back( new Triangle(vertices[vertex_i], vertices[vertex_i+1], vertices[vertex_i+2], material));
 				vertex_i += 3;
-
-				/*if (indexed_uvs.size() > 0)
-				{
-					uvs.push_back( indexed_uvs[ unsigned int(v1.y) -1] );
-					uvs.push_back( indexed_uvs[ unsigned int(v2.y) -1] );
-					uvs.push_back( indexed_uvs[ unsigned int(v3.y) -1] );
-				}*/
-
-				/*
-				if (indexed_normals.size() > 0)
-				{
-					normals.push_back( indexed_normals[ unsigned int(v1.z) -1] );
-					normals.push_back( indexed_normals[ unsigned int(v2.z) -1] );
-					normals.push_back( indexed_normals[ unsigned int(v3.z) -1] );
-				}*/
 			}
 		}
 	}
@@ -159,6 +139,138 @@ bool Mesh::loadOBJ(const char* filename)
 	Matrix4x4 sphereTransform;
 	sphereTransform = sphereTransform.translate(center);
 	sphereBBox = new Sphere(halfSize.length(),sphereTransform,pink_50);
+	delete data;
+
+	return true;
+}*/
+
+bool Mesh::loadOBJ(const char* filename)
+{
+	struct stat stbuffer;
+
+	std::cout << "Loading Mesh: " << filename << std::endl;
+
+	FILE* f = fopen(filename, "rb");
+	if (f == NULL)
+	{
+		std::cerr << "File not found: " << filename << std::endl;
+		return false;
+	}
+
+	stat(filename, &stbuffer);
+
+	unsigned int size = stbuffer.st_size;
+	char* data = new char[size + 1];
+	fread(data, size, 1, f);
+	fclose(f);
+	data[size] = 0;
+
+	char* pos = data;
+	char line[255];
+	int i = 0;
+
+	std::vector<Vector3D> indexed_positions;
+	std::vector<Vector3D> indexed_normals;
+	//std::vector<Vector2D> indexed_uvs;
+
+	const float max_float = 10000000;
+	const float min_float = -10000000;
+
+	unsigned int vertex_i = 0;
+
+	xyzMin = Vector3D(max_float);
+	xyzMax = Vector3D(min_float);
+	//parse file
+	while (*pos != 0)
+	{
+		if (*pos == '\n') pos++;
+		if (*pos == '\r') pos++;
+
+		//read one line
+		i = 0;
+		while (i < 255 && pos[i] != '\n' && pos[i] != '\r' && pos[i] != 0) i++;
+		memcpy(line, pos, i);
+		line[i] = 0;
+		pos = pos + i;
+
+		//std::cout << "Line: \"" << line << "\"" << std::endl;
+		if (*line == '#' || *line == 0) continue; //comment
+
+												  //tokenize line
+		std::vector<std::string> tokens = tokenize(line, " ");
+
+		if (tokens.empty()) continue;
+
+		if (tokens[0] == "v" && tokens.size() == 4)
+		{
+			Vector3D v(atof(tokens[1].c_str()), atof(tokens[2].c_str()), -atof(tokens[3].c_str()));
+			computemaxMinVertex(&xyzMin, &xyzMax, v);
+			indexed_positions.push_back(v);
+		}
+		/*else if (tokens[0] == "vt" && tokens.size() == 4)
+		{
+		Vector2 v( atof(tokens[1].c_str()), atof(tokens[2].c_str()) );
+		indexed_uvs.push_back(v);
+		}*/
+		else if (tokens[0] == "vn" && tokens.size() == 4)
+		{
+			Vector3D v(atof(tokens[1].c_str()), atof(tokens[2].c_str()), atof(tokens[3].c_str()));
+			indexed_normals.push_back(v);
+		}
+		/*else if (tokens[0] == "s") //surface? it appears one time before the faces ????????????????????????
+		{
+		//process mesh
+		if (uvs.size() == 0 && indexed_uvs.size() )
+		uvs.resize(1);
+		}*/
+		else if (tokens[0] == "f" && tokens.size() >= 4)
+		{
+			Vector3D v1, v2, v3;
+			v1 = parseVector3(tokens[1].c_str(), '/');
+
+			for (int iPoly = 2; iPoly < tokens.size() - 1; iPoly++)
+			{
+				v2 = parseVector3(tokens[iPoly].c_str(), '/');
+				v3 = parseVector3(tokens[iPoly + 1].c_str(), '/');
+
+				vertices.push_back(indexed_positions[unsigned int(v1.x) - 1]);
+				vertices.push_back(indexed_positions[unsigned int(v2.x) - 1]);
+				vertices.push_back(indexed_positions[unsigned int(v3.x) - 1]);
+
+				/*triangles.push_back(new Triangle( indexed_positions[unsigned int(v1.x) - 1],
+				indexed_positions[unsigned int(v2.x) - 1],
+				indexed_positions[unsigned int(v3.x) - 1], new Phong( normal que sigui, 50) ) ); //not needed
+				*/
+				triangles.push_back(new Triangle(vertices[vertex_i], vertices[vertex_i + 1], vertices[vertex_i + 2], material)); //not needed
+
+				vertex_i += 3;
+
+				/*if (indexed_uvs.size() > 0)
+				{
+				uvs.push_back( indexed_uvs[ unsigned int(v1.y) -1] );
+				uvs.push_back( indexed_uvs[ unsigned int(v2.y) -1] );
+				uvs.push_back( indexed_uvs[ unsigned int(v3.y) -1] );
+				}*/
+
+				/*
+				if (indexed_normals.size() > 0)
+				{
+				normals.push_back( indexed_normals[ unsigned int(v1.z) -1] );
+				normals.push_back( indexed_normals[ unsigned int(v2.z) -1] );
+				normals.push_back( indexed_normals[ unsigned int(v3.z) -1] );
+				}*/
+			}
+		}
+	}
+
+	center = (xyzMax + xyzMin) * 0.5;
+	halfSize = xyzMax - center;
+	double radius = halfSize.x + halfSize.y + halfSize.z *.5;
+
+	Material *pink_50 = new Phong(Vector3D(.976, .062, .843), 50);
+	Matrix4x4 sphereTransform;
+	sphereTransform = sphereTransform.translate(center);
+	sphereBBox = new Sphere(radius, sphereTransform, pink_50);
 	delete data;
 
 	return true;
