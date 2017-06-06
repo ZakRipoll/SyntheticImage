@@ -199,7 +199,7 @@ void buildOurScene(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsList 
 	/* **************************** */
 	/* Declare and place the camera */
 	/* **************************** */
-	Matrix4x4 cameraToWorld = Matrix4x4::translate(Vector3D(0, 800, -1500));
+	Matrix4x4 cameraToWorld = Matrix4x4::translate(Vector3D(0, 10, -50));
 	double fovDegrees = 60;
 	double fovRadians = Utils::degreesToRadians(fovDegrees);
 	cam = new PerspectiveCamera(cameraToWorld, fovRadians, *film);
@@ -209,23 +209,23 @@ void buildOurScene(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsList 
 
 	/* OIBJECTS*/
 	Material* meshMaterial = new Phong(Vector3D(0.2, 0.7, 0.3), 50);
-	Shape* mesh = new Mesh("deer.obj",meshMaterial);
+	Shape* mesh = new Mesh("lee.obj",meshMaterial);
 	objectsList->push_back(mesh);
 
 	/* ****** */
 	/* Lights */
 	/* ****** */
 	lightSourceList = new std::vector<PointLightSource>;
-	Vector3D lightPosition1 = Vector3D(0, offset + 10, 10 * offset);
-	//Vector3D lightPosition2 = Vector3D(0, offset - 1, 0);
-	//Vector3D lightPosition3 = Vector3D(0, offset - 1, offset);
-	Vector3D intensity = Vector3D(100); // Radiant intensity (watts/sr)
+	Vector3D lightPosition1 = Vector3D(5, 10, -35);
+	Vector3D lightPosition2 = Vector3D(-5,10 , -35);
+	Vector3D lightPosition3 = Vector3D(0, 0, -35);
+	Vector3D intensity = Vector3D(500); // Radiant intensity (watts/sr)
 	PointLightSource pointLS1(lightPosition1, intensity);
-	//PointLightSource pointLS2(lightPosition2, intensity);
-	//PointLightSource pointLS3(lightPosition3, intensity);
+	PointLightSource pointLS2(lightPosition2, intensity);
+	PointLightSource pointLS3(lightPosition3, intensity);
 	lightSourceList->push_back(pointLS1);
-	//lightSourceList->push_back(pointLS2);
-	//lightSourceList->push_back(pointLS3);
+	lightSourceList->push_back(pointLS2);
+	lightSourceList->push_back(pointLS3);
 }
 
 void raytrace(Camera* &cam, Shader* &shader, Film* &film,
@@ -407,8 +407,8 @@ int main()
 
 	buildOurScene(cam, film,objectsList,lightSourceList);
 
-	shader = new NormalShader();
-	//shader = new DirectShader(Vector3D(0));
+	//shader = new NormalShader();
+	shader = new DirectShader(Vector3D(0));
 	//shader = new IntersectionShader(Vector3D(1, 0, 0), bgColor);
 
 	// Launch some rays!

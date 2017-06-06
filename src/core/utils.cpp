@@ -28,13 +28,15 @@ bool Utils::hasIntersection(const Ray &ray, const std::vector<Shape*> &objectsLi
 
 bool Utils::getClosestIntersection(const Ray &cameraRay, const std::vector<Shape*> &objectsList, Intersection &its)
 {	 
+	bool colision = false;
+
 	for (size_t objindex = 0; objindex < objectsList.size(); objindex++)
 	{
 		const Shape *obj = objectsList.at(objindex);
 
-		if (obj->rayIntersect(cameraRay, its)) return true;
+		colision |= obj->rayIntersect(cameraRay, its);
 	}
-    return false;
+    return colision;
 }
 
 double interpolate(double val, double y0, double x0, double y1, double x1 )

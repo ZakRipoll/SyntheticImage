@@ -212,11 +212,11 @@ bool Mesh::loadOBJ(const char* filename)
 		Vector2 v( atof(tokens[1].c_str()), atof(tokens[2].c_str()) );
 		indexed_uvs.push_back(v);
 		}*/
-		else if (tokens[0] == "vn" && tokens.size() == 4)
+		/*else if (tokens[0] == "vn" && tokens.size() == 4)
 		{
 			Vector3D v(atof(tokens[1].c_str()), atof(tokens[2].c_str()), atof(tokens[3].c_str()));
 			indexed_normals.push_back(v);
-		}
+		}*/
 		/*else if (tokens[0] == "s") //surface? it appears one time before the faces ????????????????????????
 		{
 		//process mesh
@@ -265,12 +265,11 @@ bool Mesh::loadOBJ(const char* filename)
 
 	center = (xyzMax + xyzMin) * 0.5;
 	halfSize = xyzMax - center;
-	double radius = halfSize.x + halfSize.y + halfSize.z *.5;
 
 	Material *pink_50 = new Phong(Vector3D(.976, .062, .843), 50);
 	Matrix4x4 sphereTransform;
 	sphereTransform = sphereTransform.translate(center);
-	sphereBBox = new Sphere(radius, sphereTransform, pink_50);
+	sphereBBox = new Sphere(halfSize.length(), sphereTransform, pink_50);
 	delete data;
 
 	return true;
@@ -358,20 +357,19 @@ Vector3D parseVector3(const char* text, const char separator)
 	return result;
 };
 
-// Chapter 3 PBRT, page 117
+
 bool Mesh::rayIntersect(const Ray &ray, Intersection &its) const
 {
+	bool collide = false;
 	if (sphereBBox->rayIntersectP(ray)) {
 		for (int objindex = 0; objindex < triangles.size(); objindex++) {
 			const Shape * obj = triangles.at(objindex);
-			if (obj->rayIntersectP(ray)) {
-				if (obj->rayIntersect(ray, its)) return true;
-			}
+			collide |= obj->rayIntersect(ray, its);
 		}
 	}
-	return false;
+	return collide;
 }
-// Chapter 3 PBRT, page 117
+
 bool Mesh::rayIntersectP(const Ray &ray) const
 {
 	if (sphereBBox->rayIntersectP(ray)) {
