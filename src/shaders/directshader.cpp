@@ -22,8 +22,11 @@ Vector3D DirectShader::computeColor(const Ray & r, const std::vector<Shape*>& ob
 	Ray refRay;
 
 	if (its.shape->getMaterial().hasSpecular()) {
+
+		if (dot(its.normal, wo) < 0) return bgColor;
+
 		wr = Utils::computeReflectionDirection(r.d,its.normal);
-		refRay = Ray(its.itsPoint, wr, r.depth + 1);
+		refRay = Ray(its.itsPoint, wr, r.depth);
 		return computeColor(refRay, objList, lsList);
 	}
 
