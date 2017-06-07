@@ -37,116 +37,6 @@ void computemaxMinVertex(Vector3D *xyzMin, Vector3D *xyzMax, Vector3D aux) {
 	else if (xyzMax->z < aux.z) xyzMax->z = aux.z;
 }
 
-
-/*bool Mesh::loadOBJ(const char* filename)
-{
-	struct stat stbuffer;
-
-	std::cout << "Loading Mesh: " << filename << std::endl;
-
-	FILE* f = fopen(filename,"rb");
-	if (f == NULL)
-	{
-		std::cerr << "File not found: " << filename << std::endl;
-		return false;
-	}
-
-	stat(filename, &stbuffer);
-
-	unsigned int size = stbuffer.st_size;
-	char* data = new char[size+1];
-	fread(data,size,1,f);
-	fclose(f);
-	data[size] = 0;
-
-	char* pos = data;
-	char line[255];
-	int i = 0;
-
-	std::vector<Vector3D> indexed_positions;
-	std::vector<Vector3D> indexed_normals;
-	//std::vector<Vector2D> indexed_uvs;
-
-	const float max_float = 10000000;
-	const float min_float = -10000000;
-
-	unsigned int vertex_i = 0;
-
-	xyzMin = Vector3D (max_float);
-	xyzMax = Vector3D (min_float);
-	//parse file
-	while(*pos != 0)
-	{
-		if (*pos == '\n') pos++;
-		if (*pos == '\r') pos++;
-
-		//read one line
-		i = 0;
-		while(i < 255 && pos[i] != '\n' && pos[i] != '\r' && pos[i] != 0) i++;
-		memcpy(line,pos,i);
-		line[i] = 0;
-		pos = pos + i;
-
-		//std::cout << "Line: \"" << line << "\"" << std::endl;
-		if (*line == '#' || *line == 0) continue; //comment
-
-		//tokenize line
-		std::vector<std::string> tokens = tokenize(line," ");
-
-		if (tokens.empty()) continue;
-
-		if (tokens[0] == "v" && tokens.size() == 4)
-		{
-			Vector3D v( atof(tokens[1].c_str()), atof(tokens[2].c_str()), -atof(tokens[3].c_str()) );
-			computemaxMinVertex(&xyzMin, &xyzMax, v);
-			indexed_positions.push_back(v);
-		}
-		/*else if (tokens[0] == "vt" && tokens.size() == 4)
-		{
-			Vector2 v( atof(tokens[1].c_str()), atof(tokens[2].c_str()) );
-			indexed_uvs.push_back(v);
-		}
-		else if (tokens[0] == "vn" && tokens.size() == 4)
-		{
-			Vector3D v( atof(tokens[1].c_str()), atof(tokens[2].c_str()), atof(tokens[3].c_str()) );
-			indexed_normals.push_back(v);
-		}
-	
-		else if (tokens[0] == "f" && tokens.size() >= 4)
-		{
-			Vector3D v1,v2,v3;
-			v1 = parseVector3( tokens[1].c_str(), '/' );
-
-			for (int iPoly = 2; iPoly < tokens.size() - 1; iPoly++)
-			{
-				v2 = parseVector3( tokens[iPoly].c_str(), '/' );
-				v3 = parseVector3( tokens[iPoly+1].c_str(), '/' );
-
-				vertices.push_back( indexed_positions[ unsigned int(v1.x) -1] );
-				vertices.push_back( indexed_positions[ unsigned int(v2.x) -1] );
-				vertices.push_back( indexed_positions[ unsigned int(v3.x) -1] );
-
-				/*triangles.push_back(new Triangle( indexed_positions[unsigned int(v1.x) - 1], 
-					indexed_positions[unsigned int(v2.x) - 1],
-					indexed_positions[unsigned int(v3.x) - 1], new Phong( normal que sigui, 50) ) ); //not needed
-				
-				triangles.push_back( new Triangle(vertices[vertex_i], vertices[vertex_i+1], vertices[vertex_i+2], material));
-				vertex_i += 3;
-			}
-		}
-	}
-
-	center = (xyzMax + xyzMin) * 0.5;
-	halfSize = xyzMax - center;
-	Material *pink_50 = new Phong(Vector3D(.976, .062, .843), 50);
-	Matrix4x4 sphereTransform;
-	sphereTransform = sphereTransform.translate(center);
-	sphereBBox = new Sphere(halfSize.length(),sphereTransform,pink_50);
-	delete data;
-
-	return true;
-}*/
-
 bool Mesh::loadOBJ(const char* filename)
 {
 	struct stat stbuffer;
@@ -199,7 +89,7 @@ bool Mesh::loadOBJ(const char* filename)
 		//std::cout << "Line: \"" << line << "\"" << std::endl;
 		if (*line == '#' || *line == 0) continue; //comment
 
-												  //tokenize line
+		//tokenize line
 		std::vector<std::string> tokens = tokenize(line, " ");
 
 		if (tokens.empty()) continue;
@@ -210,22 +100,13 @@ bool Mesh::loadOBJ(const char* filename)
 			computemaxMinVertex(&xyzMin, &xyzMax, v);
 			indexed_positions.push_back(v);
 		}
-		/*else if (tokens[0] == "vt" && tokens.size() == 4)
-		{
-		Vector2 v( atof(tokens[1].c_str()), atof(tokens[2].c_str()) );
-		indexed_uvs.push_back(v);
-		}*/
-		/*else if (tokens[0] == "vn" && tokens.size() == 4)
+		
+		else if (tokens[0] == "vn" && tokens.size() == 4)
 		{
 			Vector3D v(atof(tokens[1].c_str()), atof(tokens[2].c_str()), atof(tokens[3].c_str()));
 			indexed_normals.push_back(v);
-		}*/
-		/*else if (tokens[0] == "s") //surface? it appears one time before the faces ????????????????????????
-		{
-		//process mesh
-		if (uvs.size() == 0 && indexed_uvs.size() )
-		uvs.resize(1);
-		}*/
+		}
+		
 		else if (tokens[0] == "f" && tokens.size() >= 4)
 		{
 			Vector3D v1, v2, v3;
@@ -244,24 +125,18 @@ bool Mesh::loadOBJ(const char* filename)
 				indexed_positions[unsigned int(v2.x) - 1],
 				indexed_positions[unsigned int(v3.x) - 1], new Phong( normal que sigui, 50) ) ); //not needed
 				*/
-				triangles.push_back(new Triangle(vertices[vertex_i], vertices[vertex_i + 1], vertices[vertex_i + 2], material)); //not needed
 
-				vertex_i += 3;
 
-				/*if (indexed_uvs.size() > 0)
-				{
-				uvs.push_back( indexed_uvs[ unsigned int(v1.y) -1] );
-				uvs.push_back( indexed_uvs[ unsigned int(v2.y) -1] );
-				uvs.push_back( indexed_uvs[ unsigned int(v3.y) -1] );
-				}*/
-
-				/*
 				if (indexed_normals.size() > 0)
 				{
-				normals.push_back( indexed_normals[ unsigned int(v1.z) -1] );
-				normals.push_back( indexed_normals[ unsigned int(v2.z) -1] );
-				normals.push_back( indexed_normals[ unsigned int(v3.z) -1] );
-				}*/
+					normals.push_back(indexed_normals[unsigned int(v1.z) - 1]);
+					normals.push_back(indexed_normals[unsigned int(v2.z) - 1]);
+					normals.push_back(indexed_normals[unsigned int(v3.z) - 1]);
+				}
+
+				triangles.push_back(new LightTriangle(vertices[vertex_i], vertices[vertex_i + 1], vertices[vertex_i + 2])); //not needed
+
+				vertex_i += 3;
 			}
 		}
 	}
@@ -279,6 +154,19 @@ void Mesh::createBoundingBox(Vector3D xyzMin,Vector3D xyzMax)
 	Vector3D x6(xyzMax.x, xyzMin.y, xyzMax.z);
 	Vector3D x7(xyzMax.x, xyzMax.y, xyzMax.z);
 	Vector3D x8(xyzMin.x, xyzMax.y, xyzMax.z);
+
+	/*boundingBox.push_back(new LightTriangle(x1, x2, x3, cross((x3 - x1), (x2 - x1)).normalized()));
+	boundingBox.push_back(new LightTriangle(x1, x3, x4, cross((x4 - x1), (x3 - x1)).normalized()));
+	boundingBox.push_back(new LightTriangle(x2, x6, x7, cross((x7 - x2), (x6 - x2)).normalized()));
+	boundingBox.push_back(new LightTriangle(x2, x7, x3, cross((x3 - x2), (x7 - x2)).normalized()));
+	boundingBox.push_back(new LightTriangle(x6, x5, x8, cross((x8 - x6), (x5 - x6)).normalized()));
+	boundingBox.push_back(new LightTriangle(x6, x8, x7, cross((x7 - x6), (x8 - x6)).normalized()));
+	boundingBox.push_back(new LightTriangle(x5, x1, x4, cross((x4 - x5), (x1 - x5)).normalized()));
+	boundingBox.push_back(new LightTriangle(x5, x4, x8, cross((x8 - x5), (x4 - x5)).normalized()));
+	boundingBox.push_back(new LightTriangle(x4, x3, x7, cross((x7 - x4), (x3 - x4)).normalized()));
+	boundingBox.push_back(new LightTriangle(x4, x7, x8, cross((x8 - x4), (x7 - x4)).normalized()));
+	boundingBox.push_back(new LightTriangle(x5, x6, x2, cross((x2 - x5), (x6 - x5)).normalized()));
+	boundingBox.push_back(new LightTriangle(x5, x2, x1, cross((x1 - x5), (x2 - x5)).normalized()));*/
 
 	boundingBox.push_back(new Triangle(x1, x2, x3, material));
 	boundingBox.push_back(new Triangle(x1, x3, x4, material));
@@ -431,8 +319,11 @@ bool Mesh::rayIntersect(const Ray &ray, Intersection &its) const
 			if (Utils::hasIntersection(ray, voxels.at(voxInd)->boundingBox)) {
 				for (int objindex = 0; objindex < voxels.at(voxInd)->index_triangles.size(); objindex++) {
 					int index = voxels.at(voxInd)->index_triangles.at(objindex);
-					const Shape * obj = triangles.at(index);
-					collide |= obj->rayIntersect(ray, its);
+					const LightTriangle * obj = triangles.at(index);
+					if (obj->rayIntersect(ray, its)) {
+						collide = true;
+						its.shape = this;
+					}
 				}
 			}
 		}
@@ -447,7 +338,7 @@ bool Mesh::rayIntersectP(const Ray &ray) const
 			if (Utils::hasIntersection(ray, voxels.at(voxInd)->boundingBox)) {
 				for (int objindex = 0; objindex < voxels.at(voxInd)->index_triangles.size(); objindex++) {
 					int index = voxels.at(voxInd)->index_triangles.at(objindex);
-					const Shape * obj = triangles.at(index);
+					const LightTriangle * obj = triangles.at(index);
 					if (obj->rayIntersectP(ray)) return true;
 				}
 			}
@@ -458,14 +349,14 @@ bool Mesh::rayIntersectP(const Ray &ray) const
 
 //VOXELS
 
-Voxel::Voxel(Vector3D xyzMin, Vector3D xyzMax, std::vector<Shape*>*triangles) {
+Voxel::Voxel(Vector3D xyzMin, Vector3D xyzMax, std::vector<LightTriangle*>*triangles) {
 	
 	this->xyzMin = xyzMin;
 	this->xyzMax = xyzMax;
 	createBoundingBox(xyzMin, xyzMax);
 	
 	for (size_t triangle = 0; triangle < triangles->size(); triangle++) {
-		Triangle * t = (Triangle *)triangles->at(triangle);
+		LightTriangle * t = triangles->at(triangle);
 		std::vector<Vector3D*> * aux = t->getVertex();
 		for (size_t vertex = 0; vertex < aux->size(); vertex++) {
 			Vector3D *aux2 = aux->at(vertex);

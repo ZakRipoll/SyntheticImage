@@ -8,6 +8,7 @@
 #include <vector>
 #include <iostream>
 #include "../core/vector3d.h"
+#include "lighttriangle.h"
 #include "triangle.h"
 #include "../materials/phong.h"
 #include "../shapes/sphere.h"
@@ -18,7 +19,7 @@ class Voxel {
 public:
 
 	Voxel() = delete;
-	Voxel(Vector3D xyzMin, Vector3D xyzMax, std::vector<Shape*> *triangles);
+	Voxel(Vector3D xyzMin, Vector3D xyzMax, std::vector<LightTriangle*> *triangles);
 
 	std::vector<int> index_triangles;
 	std::vector<Shape*> boundingBox;
@@ -36,6 +37,7 @@ public:
 #include <vector>
 #include <iostream>
 #include "../core/vector3d.h"
+#include "lighttriangle.h"
 #include "triangle.h"
 #include "../materials/phong.h"
 #include "../shapes/sphere.h"
@@ -56,9 +58,18 @@ public:
 	virtual bool rayIntersect(const Ray &ray, Intersection &its) const;
 	virtual bool rayIntersectP(const Ray &ray) const;
 
+	/*std::vector<Vector3D> vertices;
+	std::vector<Vector3D> normals;
+	std::vector< LightTriangle *> triangles;
+	Vector3D xyzMin, xyzMax;
+	Vector3D center, halfSize;
+	Sphere * sphereBBox;
+	std::vector<LightTriangle*> boundingBox;
+	std::vector<Voxel*> voxels;*/
+
 	std::vector< Vector3D > vertices;
 	std::vector<Vector3D> normals;
-	std::vector< Shape*> triangles;
+	std::vector< LightTriangle*> triangles;
 	Vector3D xyzMin, xyzMax;
 	Vector3D center, halfSize;
 	Sphere * sphereBBox;

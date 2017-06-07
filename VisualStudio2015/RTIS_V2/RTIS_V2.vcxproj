@@ -168,6 +168,7 @@
     <ClCompile Include="..\..\src\shaders\normalshader.cpp" />
     <ClCompile Include="..\..\src\shaders\shader.cpp" />
     <ClCompile Include="..\..\src\shapes\infiniteplane.cpp" />
+    <ClCompile Include="..\..\src\shapes\lighttriangle.cpp" />
     <ClCompile Include="..\..\src\shapes\mesh.cpp" />
     <ClCompile Include="..\..\src\shapes\shape.cpp" />
     <ClCompile Include="..\..\src\shapes\sphere.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="..\..\src\shaders\normalshader.h" />
     <ClInclude Include="..\..\src\shaders\shader.h" />
     <ClInclude Include="..\..\src\shapes\infiniteplane.h" />
+    <ClInclude Include="..\..\src\shapes\lighttriangle.h" />
     <ClInclude Include="..\..\src\shapes\mesh.h" />
     <ClInclude Include="..\..\src\shapes\shape.h" />
     <ClInclude Include="..\..\src\shapes\sphere.h" />

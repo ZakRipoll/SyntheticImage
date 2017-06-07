@@ -440,9 +440,10 @@ int main()
 
 	buildOurScene(cam, film,objectsList,lightSourceList);
 
-	shader = new NormalShader();
+	//shader = new NormalShader();
 	//shader = new DirectShader(Vector3D(0));
-	//shader = new IntersectionShader(Vector3D(1, 0, 0), bgColor);
+	//shader = new GlobalShader(Vector3D(0), 50, 2);
+	shader = new IntersectionShader(Vector3D(1, 0, 0), bgColor);
 
 	// Launch some rays!
 	raytrace(cam, shader, film, objectsList, lightSourceList);

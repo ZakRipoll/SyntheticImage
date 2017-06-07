@@ -129,6 +129,9 @@
     <ClCompile Include="..\..\src\shapes\mesh.cpp">
       <Filter>src\shapes</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\shapes\lighttriangle.cpp">
+      <Filter>src\shapes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\cameras\camera.h">
@@ -216,6 +219,9 @@
       <Filter>src\sampler</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\shapes\mesh.h">
+      <Filter>src\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\shapes\lighttriangle.h">
       <Filter>src\shapes</Filter>
     </ClInclude>
   </ItemGroup>
