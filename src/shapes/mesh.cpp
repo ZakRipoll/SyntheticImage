@@ -16,7 +16,6 @@ Mesh::Mesh(const char* name_, Material *material_) : Shape(Matrix4x4(), material
 	createVoxels();
 }
 
-
 void Mesh::clear()
 {
 	vertices.clear();
@@ -121,12 +120,6 @@ bool Mesh::loadOBJ(const char* filename)
 				vertices.push_back(indexed_positions[unsigned int(v2.x) - 1]);
 				vertices.push_back(indexed_positions[unsigned int(v3.x) - 1]);
 
-				/*triangles.push_back(new Triangle( indexed_positions[unsigned int(v1.x) - 1],
-				indexed_positions[unsigned int(v2.x) - 1],
-				indexed_positions[unsigned int(v3.x) - 1], new Phong( normal que sigui, 50) ) ); //not needed
-				*/
-
-
 				if (indexed_normals.size() > 0)
 				{
 					normals.push_back(indexed_normals[unsigned int(v1.z) - 1]);
@@ -134,7 +127,7 @@ bool Mesh::loadOBJ(const char* filename)
 					normals.push_back(indexed_normals[unsigned int(v3.z) - 1]);
 				}
 
-				triangles.push_back(new LightTriangle(vertices[vertex_i], vertices[vertex_i + 1], vertices[vertex_i + 2])); //not needed
+				triangles.push_back(new LightTriangle(vertices[vertex_i], vertices[vertex_i + 1], vertices[vertex_i + 2]));
 
 				vertex_i += 3;
 			}
@@ -144,6 +137,7 @@ bool Mesh::loadOBJ(const char* filename)
 
 	return true;
 }
+
 void Mesh::createBoundingBox(Vector3D xyzMin,Vector3D xyzMax)
 {
 	Vector3D x1(xyzMin.x, xyzMin.y, xyzMin.z);
@@ -155,31 +149,18 @@ void Mesh::createBoundingBox(Vector3D xyzMin,Vector3D xyzMax)
 	Vector3D x7(xyzMax.x, xyzMax.y, xyzMax.z);
 	Vector3D x8(xyzMin.x, xyzMax.y, xyzMax.z);
 
-	/*boundingBox.push_back(new LightTriangle(x1, x2, x3, cross((x3 - x1), (x2 - x1)).normalized()));
-	boundingBox.push_back(new LightTriangle(x1, x3, x4, cross((x4 - x1), (x3 - x1)).normalized()));
-	boundingBox.push_back(new LightTriangle(x2, x6, x7, cross((x7 - x2), (x6 - x2)).normalized()));
-	boundingBox.push_back(new LightTriangle(x2, x7, x3, cross((x3 - x2), (x7 - x2)).normalized()));
-	boundingBox.push_back(new LightTriangle(x6, x5, x8, cross((x8 - x6), (x5 - x6)).normalized()));
-	boundingBox.push_back(new LightTriangle(x6, x8, x7, cross((x7 - x6), (x8 - x6)).normalized()));
-	boundingBox.push_back(new LightTriangle(x5, x1, x4, cross((x4 - x5), (x1 - x5)).normalized()));
-	boundingBox.push_back(new LightTriangle(x5, x4, x8, cross((x8 - x5), (x4 - x5)).normalized()));
-	boundingBox.push_back(new LightTriangle(x4, x3, x7, cross((x7 - x4), (x3 - x4)).normalized()));
-	boundingBox.push_back(new LightTriangle(x4, x7, x8, cross((x8 - x4), (x7 - x4)).normalized()));
-	boundingBox.push_back(new LightTriangle(x5, x6, x2, cross((x2 - x5), (x6 - x5)).normalized()));
-	boundingBox.push_back(new LightTriangle(x5, x2, x1, cross((x1 - x5), (x2 - x5)).normalized()));*/
-
-	boundingBox.push_back(new Triangle(x1, x2, x3, material));
-	boundingBox.push_back(new Triangle(x1, x3, x4, material));
-	boundingBox.push_back(new Triangle(x2, x6, x7, material));
-	boundingBox.push_back(new Triangle(x2, x7, x3, material));
-	boundingBox.push_back(new Triangle(x6, x5, x8, material));
-	boundingBox.push_back(new Triangle(x6, x8, x7, material));
-	boundingBox.push_back(new Triangle(x5, x1, x4, material));
-	boundingBox.push_back(new Triangle(x5, x4, x8, material));
-	boundingBox.push_back(new Triangle(x4, x3, x7, material));
-	boundingBox.push_back(new Triangle(x4, x7, x8, material));
-	boundingBox.push_back(new Triangle(x5, x6, x2, material));
-	boundingBox.push_back(new Triangle(x5, x2, x1, material));
+	boundingBox.push_back(new Triangle(x1, x2, x3, NULL));
+	boundingBox.push_back(new Triangle(x1, x3, x4, NULL));
+	boundingBox.push_back(new Triangle(x2, x6, x7, NULL));
+	boundingBox.push_back(new Triangle(x2, x7, x3, NULL));
+	boundingBox.push_back(new Triangle(x6, x5, x8, NULL));
+	boundingBox.push_back(new Triangle(x6, x8, x7, NULL));
+	boundingBox.push_back(new Triangle(x5, x1, x4, NULL));
+	boundingBox.push_back(new Triangle(x5, x4, x8, NULL));
+	boundingBox.push_back(new Triangle(x4, x3, x7, NULL));
+	boundingBox.push_back(new Triangle(x4, x7, x8, NULL));
+	boundingBox.push_back(new Triangle(x5, x6, x2, NULL));
+	boundingBox.push_back(new Triangle(x5, x2, x1, NULL));
 }
 
 void Mesh::createSphereBox() {
@@ -191,6 +172,7 @@ void Mesh::createSphereBox() {
 	sphereTransform = sphereTransform.translate(center);
 	sphereBBox = new Sphere(halfSize.length(), sphereTransform, pink_50);
 }
+
 void Mesh::createVoxels()
 {
 	Vector3D auxMin, auxMax;
@@ -310,7 +292,6 @@ Vector3D parseVector3(const char* text, const char separator)
 	return result;
 };
 
-
 bool Mesh::rayIntersect(const Ray &ray, Intersection &its) const
 {
 	bool collide = false;
@@ -370,8 +351,6 @@ Voxel::Voxel(Vector3D xyzMin, Vector3D xyzMax, std::vector<LightTriangle*>*trian
 
 void Voxel::createBoundingBox(Vector3D xyzMin, Vector3D xyzMax)
 {
-	Material * material = new Phong(Vector3D(0.2, 0.7, 0.3), 50);
-
 	Vector3D x1(xyzMin.x, xyzMin.y, xyzMin.z);
 	Vector3D x2(xyzMax.x, xyzMin.y, xyzMin.z);
 	Vector3D x3(xyzMax.x, xyzMax.y, xyzMin.z);
@@ -381,16 +360,16 @@ void Voxel::createBoundingBox(Vector3D xyzMin, Vector3D xyzMax)
 	Vector3D x7(xyzMax.x, xyzMax.y, xyzMax.z);
 	Vector3D x8(xyzMin.x, xyzMax.y, xyzMax.z);
 
-	boundingBox.push_back(new Triangle(x1, x2, x3, material));
-	boundingBox.push_back(new Triangle(x1, x3, x4, material));
-	boundingBox.push_back(new Triangle(x2, x6, x7, material));
-	boundingBox.push_back(new Triangle(x2, x7, x3, material));
-	boundingBox.push_back(new Triangle(x6, x5, x8, material));
-	boundingBox.push_back(new Triangle(x6, x8, x7, material));
-	boundingBox.push_back(new Triangle(x5, x1, x4, material));
-	boundingBox.push_back(new Triangle(x5, x4, x8, material));
-	boundingBox.push_back(new Triangle(x4, x3, x7, material));
-	boundingBox.push_back(new Triangle(x4, x7, x8, material));
-	boundingBox.push_back(new Triangle(x5, x6, x2, material));
-	boundingBox.push_back(new Triangle(x5, x2, x1, material));
+	boundingBox.push_back(new Triangle(x1, x2, x3, NULL));
+	boundingBox.push_back(new Triangle(x1, x3, x4, NULL));
+	boundingBox.push_back(new Triangle(x2, x6, x7, NULL));
+	boundingBox.push_back(new Triangle(x2, x7, x3, NULL));
+	boundingBox.push_back(new Triangle(x6, x5, x8, NULL));
+	boundingBox.push_back(new Triangle(x6, x8, x7, NULL));
+	boundingBox.push_back(new Triangle(x5, x1, x4, NULL));
+	boundingBox.push_back(new Triangle(x5, x4, x8, NULL));
+	boundingBox.push_back(new Triangle(x4, x3, x7, NULL));
+	boundingBox.push_back(new Triangle(x4, x7, x8, NULL));
+	boundingBox.push_back(new Triangle(x5, x6, x2, NULL));
+	boundingBox.push_back(new Triangle(x5, x2, x1, NULL));
 }
