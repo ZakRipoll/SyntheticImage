@@ -206,7 +206,7 @@ void buildOurScene(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsList 
 	/* **************************** */
 	/* Declare and place the camera */
 	/* **************************** */
-	Matrix4x4 cameraToWorld = Matrix4x4::translate(Vector3D(m->center.x, m->center.y, -m->halfSize.length()));
+	Matrix4x4 cameraToWorld = Matrix4x4::translate(Vector3D(m->center.x, m->center.y, -50));
 	double fovDegrees = 60;
 	double fovRadians = Utils::degreesToRadians(fovDegrees);
 	cam = new PerspectiveCamera(cameraToWorld, fovRadians, *film);
@@ -237,7 +237,7 @@ void buildOurScene(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsList 
 	objectsList->push_back(backPlan);
 
 	// Place the Spheres inside the Cornell Box
-	Material * mirror = new Mirror(Vector3D(1, 0.9, 0.85));
+	//Material * mirror = new Mirror(Vector3D(1, 0.9, 0.85));
 	//Matrix4x4 sphereTransform1;
 	//double radius = 1;
 	//sphereTransform1 = Matrix4x4::translate(Vector3D(-offset + radius, -offset + radius, 3.5));
@@ -438,8 +438,8 @@ int main()
 
 	buildOurScene(cam, film,objectsList,lightSourceList);
 
-	//shader = new NormalShader();
-	shader = new DirectShader(Vector3D(0));
+	shader = new NormalShader();
+	//shader = new DirectShader(Vector3D(0));
 	//shader = new IntersectionShader(Vector3D(1, 0, 0), bgColor);
 
 	// Launch some rays!

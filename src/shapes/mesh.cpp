@@ -12,6 +12,7 @@ Vector3D parseVector3(const char* text, const char separator);
 Mesh::Mesh(const char* name_, Material *material_) : Shape(Matrix4x4(), material_){
 	loadOBJ(name_);
 	createBoundingBox();
+	createSphereBox();
 }
 
 
@@ -263,14 +264,6 @@ bool Mesh::loadOBJ(const char* filename)
 			}
 		}
 	}
-
-	center = (xyzMax + xyzMin) * 0.5;
-	halfSize = xyzMax - center;
-
-	Material *pink_50 = new Phong(Vector3D(.976, .062, .843), 50);
-	Matrix4x4 sphereTransform;
-	sphereTransform = sphereTransform.translate(center);
-	sphereBBox = new Sphere(halfSize.length(), sphereTransform, pink_50);
 	delete data;
 
 	return true;
@@ -298,6 +291,16 @@ void Mesh::createBoundingBox()
 	boundingBox.push_back(new Triangle(x4, x7, x8, material));
 	boundingBox.push_back(new Triangle(x5, x6, x2, material));
 	boundingBox.push_back(new Triangle(x5, x2, x1, material));
+}
+
+void Mesh::createSphereBox() {
+	center = (xyzMax + xyzMin) * 0.5;
+	halfSize = xyzMax - center;
+
+	Material *pink_50 = new Phong(Vector3D(.976, .062, .843), 50);
+	Matrix4x4 sphereTransform;
+	sphereTransform = sphereTransform.translate(center);
+	sphereBBox = new Sphere(halfSize.length(), sphereTransform, pink_50);
 }
 std::vector<std::string> tokenize(const std::string& source, const char* delimiters, bool process_strings )
 {

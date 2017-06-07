@@ -23,6 +23,7 @@ public:
 	void clear();
 	bool loadOBJ(const char* filename);
 	void createBoundingBox();
+	void createSphereBox();
 	virtual bool rayIntersect(const Ray &ray, Intersection &its) const;
 	virtual bool rayIntersectP(const Ray &ray) const;
 
