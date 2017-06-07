@@ -13,6 +13,7 @@ Mesh::Mesh(const char* name_, Material *material_) : Shape(Matrix4x4(), material
 	loadOBJ(name_);
 	createBoundingBox(xyzMin,xyzMax);
 	createSphereBox();
+	createVoxels();
 }
 
 
@@ -306,32 +307,37 @@ void Mesh::createVoxels()
 {
 	Vector3D auxMin, auxMax;
 	double dx, dy, dz;
-	auxMin = xyzMin, auxMax = center;
-	dx = (auxMax.x - auxMin.x) * 0.5, dy = (auxMax.y - auxMin.y) * 0.5, dz = (auxMax.z - auxMin.z) * 0.5;
+	auxMin = Vector3D(xyzMin);
+	auxMax = Vector3D(center);
+	dx = (xyzMax.x - auxMin.x) * 0.5;
+	dy = (xyzMax.y - auxMin.y) * 0.5; 
+	dz = (xyzMax.z - auxMin.z) * 0.5;
+
 	//Voxel1
 	voxels.push_back(new Voxel(auxMin, auxMax, &triangles));
 	//Voxel2
 	auxMin.x += dx, auxMax.x += dx;
-	voxels.push_back(new Voxel(xyzMin, xyzMax, &triangles));
+	voxels.push_back(new Voxel(auxMin, auxMax, &triangles));
 	//Voxel3
-	auxMin.z -= dz, auxMax.z -= dz;
-	voxels.push_back(new Voxel(xyzMin, xyzMax, &triangles));
+	auxMin.z += dz, auxMax.z += dz;
+	voxels.push_back(new Voxel(auxMin, auxMax, &triangles));
 	//Voxel4
 	auxMin.x -= dx, auxMax.x -= dx;
-	voxels.push_back(new Voxel(xyzMin, xyzMax, &triangles));
+	voxels.push_back(new Voxel(auxMin, auxMax, &triangles));
 	//Voxel5
 	auxMin.y += dy, auxMax.y += dy;
-	voxels.push_back(new Voxel(xyzMin, xyzMax, &triangles));
+	voxels.push_back(new Voxel(auxMin, auxMax, &triangles));
 	//Voxel6
 	auxMin.x += dx, auxMax.x += dx;
-	voxels.push_back(new Voxel(xyzMin, xyzMax, &triangles));
+	voxels.push_back(new Voxel(auxMin, auxMax, &triangles));
 	//Voxel7
-	auxMin.z += dz, auxMax.z += dz;
-	voxels.push_back(new Voxel(xyzMin, xyzMax, &triangles));
+	auxMin.z -= dz, auxMax.z -= dz;
+	voxels.push_back(new Voxel(auxMin, auxMax, &triangles));
 	//Voxel8
 	auxMin.x -= dx, auxMax.x -= dx;
-	voxels.push_back(new Voxel(xyzMin, xyzMax, &triangles));
+	voxels.push_back(new Voxel(auxMin, auxMax, &triangles));
 }
+
 std::vector<std::string> tokenize(const std::string& source, const char* delimiters, bool process_strings )
 {
 	std::vector<std::string> tokens;
@@ -421,9 +427,14 @@ bool Mesh::rayIntersect(const Ray &ray, Intersection &its) const
 {
 	bool collide = false;
 	if (Utils::hasIntersection(ray, boundingBox)) {
-		for (int objindex = 0; objindex < triangles.size(); objindex++) {
-			const Shape * obj = triangles.at(objindex);
-			collide |= obj->rayIntersect(ray, its);
+		for (size_t voxInd = 0; voxInd < voxels.size(); voxInd++) {
+			if (Utils::hasIntersection(ray, voxels.at(voxInd)->boundingBox)) {
+				for (int objindex = 0; objindex < voxels.at(voxInd)->index_triangles.size(); objindex++) {
+					int index = voxels.at(voxInd)->index_triangles.at(objindex);
+					const Shape * obj = triangles.at(index);
+					collide |= obj->rayIntersect(ray, its);
+				}
+			}
 		}
 	}
 	return collide;
@@ -432,9 +443,14 @@ bool Mesh::rayIntersect(const Ray &ray, Intersection &its) const
 bool Mesh::rayIntersectP(const Ray &ray) const
 {
 	if (Utils::hasIntersection( ray, boundingBox ) ) {
-		for (int objindex = 0; objindex < triangles.size(); objindex++) {
-			const Shape * obj = triangles.at(objindex);
-			if(obj->rayIntersectP(ray)) return true;
+		for (size_t voxInd = 0; voxInd < voxels.size(); voxInd++) {
+			if (Utils::hasIntersection(ray, voxels.at(voxInd)->boundingBox)) {
+				for (int objindex = 0; objindex < voxels.at(voxInd)->index_triangles.size(); objindex++) {
+					int index = voxels.at(voxInd)->index_triangles.at(objindex);
+					const Shape * obj = triangles.at(index);
+					if (obj->rayIntersectP(ray)) return true;
+				}
+			}
 		}
 	}
 	return false;

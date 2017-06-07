@@ -7,6 +7,7 @@ Triangle::Triangle(const Vector3D a_, const Vector3D b_, const Vector3D c_, Mate
 	vac = (cWorld - aWorld);
 	vbc = (cWorld - bWorld);
 	nWorld = cross(vac, vab).normalized();
+	vertex = new std::vector<Vector3D*>();
 	vertex->push_back(&aWorld);
 	vertex->push_back(&bWorld);
 	vertex->push_back(&cWorld);

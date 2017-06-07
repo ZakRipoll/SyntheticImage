@@ -230,11 +230,11 @@ void buildOurScene(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsList 
 	Shape *bottomPlan = new InfinitePlane(Vector3D(0, -offset, 0), Vector3D(0, 1, 0), greyDiffuse);
 	Shape *backPlan = new InfinitePlane(Vector3D(0, 0, 3 * offset), Vector3D(0, 0, -1), blueDiffuse);
 
-	objectsList->push_back(leftPlan);
-	objectsList->push_back(rightPlan);
-	objectsList->push_back(topPlan);
-	objectsList->push_back(bottomPlan);
-	objectsList->push_back(backPlan);
+	//objectsList->push_back(leftPlan);
+	//objectsList->push_back(rightPlan);
+	//objectsList->push_back(topPlan);
+	//objectsList->push_back(bottomPlan);
+	//objectsList->push_back(backPlan);
 
 	//Place the Spheres inside the Cornell Box
 	Material * mirror = new Mirror(Vector3D(1, 0.9, 0.85));
@@ -245,8 +245,8 @@ void buildOurScene(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsList 
 	sphereTransform2 = Matrix4x4::translate(Vector3D(m->center.x+ m->halfSize.length(), m->center.y, m->center.z + 2*radius));
 	Shape *s1 = new Sphere(radius, sphereTransform1, transmissive);
 	Shape *s2 = new Sphere(radius, sphereTransform2, mirror);
-	objectsList->push_back(s1);
-	objectsList->push_back(s2);
+	//objectsList->push_back(s1);
+	//objectsList->push_back(s2);
 
 	/* ****** */
 	/* Lights */
@@ -440,8 +440,8 @@ int main()
 
 	buildOurScene(cam, film,objectsList,lightSourceList);
 
-	//shader = new NormalShader();
-	shader = new DirectShader(Vector3D(0));
+	shader = new NormalShader();
+	//shader = new DirectShader(Vector3D(0));
 	//shader = new IntersectionShader(Vector3D(1, 0, 0), bgColor);
 
 	// Launch some rays!
