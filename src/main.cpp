@@ -236,12 +236,17 @@ void buildOurScene(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsList 
 	objectsList->push_back(bottomPlan);
 	objectsList->push_back(backPlan);
 
-	// Place the Spheres inside the Cornell Box
-	//Material * mirror = new Mirror(Vector3D(1, 0.9, 0.85));
-	//Matrix4x4 sphereTransform1;
-	//double radius = 1;
-	//sphereTransform1 = Matrix4x4::translate(Vector3D(-offset + radius, -offset + radius, 3.5));
-	//Shape *s1 = new Sphere(1.5, sphereTransform1, mirror);
+	//Place the Spheres inside the Cornell Box
+	Material * mirror = new Mirror(Vector3D(1, 0.9, 0.85));
+	Material * transmissive = new Transmisive(1.1, Vector3D(1));
+	Matrix4x4 sphereTransform1,sphereTransform2;
+	double radius = 10;
+	sphereTransform1 = Matrix4x4::translate(Vector3D(m->center.x-m->halfSize.length(),m->center.y , m->center.z + 2*radius));
+	sphereTransform2 = Matrix4x4::translate(Vector3D(m->center.x+ m->halfSize.length(), m->center.y, m->center.z + 2*radius));
+	Shape *s1 = new Sphere(radius, sphereTransform1, transmissive);
+	Shape *s2 = new Sphere(radius, sphereTransform2, mirror);
+	objectsList->push_back(s1);
+	objectsList->push_back(s2);
 
 	/* ****** */
 	/* Lights */
@@ -288,14 +293,11 @@ void raytrace(Camera* &cam, Shader* &shader, Film* &film,
 			Vector3D pixelColor = Vector3D(0);
             //Compute ray color according to the used shader
 			pixelColor = shader->computeColor(cameraRay, *objectsList, *lightSourceList);
-			//if (pixelColor.x != 0 && pixelColor.y != 0 && pixelColor.z != 0) red++;
 			// Store the pixel color
 			film->setPixelValue(col, lin, pixelColor);
 
         }
     }
-	//std::cout << "No Background --> " << red << std::endl;
-	//std::cin >> red;
 }
 
 int menu() {
@@ -438,8 +440,8 @@ int main()
 
 	buildOurScene(cam, film,objectsList,lightSourceList);
 
-	shader = new NormalShader();
-	//shader = new DirectShader(Vector3D(0));
+	//shader = new NormalShader();
+	shader = new DirectShader(Vector3D(0));
 	//shader = new IntersectionShader(Vector3D(1, 0, 0), bgColor);
 
 	// Launch some rays!

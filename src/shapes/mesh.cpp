@@ -11,7 +11,7 @@ Vector3D parseVector3(const char* text, const char separator);
 
 Mesh::Mesh(const char* name_, Material *material_) : Shape(Matrix4x4(), material_){
 	loadOBJ(name_);
-	createBoundingBox();
+	createBoundingBox(xyzMin,xyzMax);
 	createSphereBox();
 }
 
@@ -268,7 +268,7 @@ bool Mesh::loadOBJ(const char* filename)
 
 	return true;
 }
-void Mesh::createBoundingBox()
+void Mesh::createBoundingBox(Vector3D xyzMin,Vector3D xyzMax)
 {
 	Vector3D x1(xyzMin.x, xyzMin.y, xyzMin.z);
 	Vector3D x2(xyzMax.x, xyzMin.y, xyzMin.z);
@@ -301,6 +301,36 @@ void Mesh::createSphereBox() {
 	Matrix4x4 sphereTransform;
 	sphereTransform = sphereTransform.translate(center);
 	sphereBBox = new Sphere(halfSize.length(), sphereTransform, pink_50);
+}
+void Mesh::createVoxels()
+{
+	Vector3D auxMin, auxMax;
+	double dx, dy, dz;
+	auxMin = xyzMin, auxMax = center;
+	dx = (auxMax.x - auxMin.x) * 0.5, dy = (auxMax.y - auxMin.y) * 0.5, dz = (auxMax.z - auxMin.z) * 0.5;
+	//Voxel1
+	voxels.push_back(new Voxel(auxMin, auxMax, &triangles));
+	//Voxel2
+	auxMin.x += dx, auxMax.x += dx;
+	voxels.push_back(new Voxel(xyzMin, xyzMax, &triangles));
+	//Voxel3
+	auxMin.z -= dz, auxMax.z -= dz;
+	voxels.push_back(new Voxel(xyzMin, xyzMax, &triangles));
+	//Voxel4
+	auxMin.x -= dx, auxMax.x -= dx;
+	voxels.push_back(new Voxel(xyzMin, xyzMax, &triangles));
+	//Voxel5
+	auxMin.y += dy, auxMax.y += dy;
+	voxels.push_back(new Voxel(xyzMin, xyzMax, &triangles));
+	//Voxel6
+	auxMin.x += dx, auxMax.x += dx;
+	voxels.push_back(new Voxel(xyzMin, xyzMax, &triangles));
+	//Voxel7
+	auxMin.z += dz, auxMax.z += dz;
+	voxels.push_back(new Voxel(xyzMin, xyzMax, &triangles));
+	//Voxel8
+	auxMin.x -= dx, auxMax.x -= dx;
+	voxels.push_back(new Voxel(xyzMin, xyzMax, &triangles));
 }
 std::vector<std::string> tokenize(const std::string& source, const char* delimiters, bool process_strings )
 {
@@ -408,4 +438,52 @@ bool Mesh::rayIntersectP(const Ray &ray) const
 		}
 	}
 	return false;
+}
+
+//VOXELS
+
+Voxel::Voxel(Vector3D xyzMin, Vector3D xyzMax, std::vector<Shape*>*triangles) {
+	
+	this->xyzMin = xyzMin;
+	this->xyzMax = xyzMax;
+	createBoundingBox(xyzMin, xyzMax);
+	
+	for (size_t triangle = 0; triangle < triangles->size(); triangle++) {
+		Triangle * t = (Triangle *)triangles->at(triangle);
+		std::vector<Vector3D*> * aux = t->getVertex();
+		for (size_t vertex = 0; vertex < aux->size(); vertex++) {
+			Vector3D *aux2 = aux->at(vertex);
+			if (aux2->x >= xyzMin.x && aux2->y >= xyzMin.y && aux2->z >= xyzMin.z && aux2->x <= xyzMax.x && aux2->y <= xyzMax.y && aux2->z <= xyzMax.z) {
+				index_triangles.push_back(triangle);
+				break;
+			}
+		}
+	}
+}
+
+void Voxel::createBoundingBox(Vector3D xyzMin, Vector3D xyzMax)
+{
+	Material * material = new Phong(Vector3D(0.2, 0.7, 0.3), 50);
+
+	Vector3D x1(xyzMin.x, xyzMin.y, xyzMin.z);
+	Vector3D x2(xyzMax.x, xyzMin.y, xyzMin.z);
+	Vector3D x3(xyzMax.x, xyzMax.y, xyzMin.z);
+	Vector3D x4(xyzMin.x, xyzMax.y, xyzMin.z);
+	Vector3D x5(xyzMin.x, xyzMin.y, xyzMax.z);
+	Vector3D x6(xyzMax.x, xyzMin.y, xyzMax.z);
+	Vector3D x7(xyzMax.x, xyzMax.y, xyzMax.z);
+	Vector3D x8(xyzMin.x, xyzMax.y, xyzMax.z);
+
+	boundingBox.push_back(new Triangle(x1, x2, x3, material));
+	boundingBox.push_back(new Triangle(x1, x3, x4, material));
+	boundingBox.push_back(new Triangle(x2, x6, x7, material));
+	boundingBox.push_back(new Triangle(x2, x7, x3, material));
+	boundingBox.push_back(new Triangle(x6, x5, x8, material));
+	boundingBox.push_back(new Triangle(x6, x8, x7, material));
+	boundingBox.push_back(new Triangle(x5, x1, x4, material));
+	boundingBox.push_back(new Triangle(x5, x4, x8, material));
+	boundingBox.push_back(new Triangle(x4, x3, x7, material));
+	boundingBox.push_back(new Triangle(x4, x7, x8, material));
+	boundingBox.push_back(new Triangle(x5, x6, x2, material));
+	boundingBox.push_back(new Triangle(x5, x2, x1, material));
 }

@@ -7,6 +7,9 @@ Triangle::Triangle(const Vector3D a_, const Vector3D b_, const Vector3D c_, Mate
 	vac = (cWorld - aWorld);
 	vbc = (cWorld - bWorld);
 	nWorld = cross(vac, vab).normalized();
+	vertex->push_back(&aWorld);
+	vertex->push_back(&bWorld);
+	vertex->push_back(&cWorld);
 }
 
 
@@ -68,6 +71,11 @@ bool Triangle::rayIntersectP(const Ray & ray) const
 	if (dot(cross(vca, (phit - cWorld)), nWorld) > comp) return false;
 
 	return true;
+}
+
+std::vector<Vector3D*>* Triangle::getVertex()
+{
+	return vertex;
 }
 
 std::string Triangle::toString() const
