@@ -156,7 +156,7 @@ int menu() {
 	std::cout << "\t\t 3: Direct Illumination Shader with Spheres" << std::endl << std::endl;
 	std::cout << "\t\t 4: Global Illumination Shader" << std::endl;
 
-	std::cout << "\n\tSelect one option: ";
+	std::cout << "\n\tSelect one option:\n";
 
 	std::cin >> option;
 
@@ -241,7 +241,7 @@ int main()
 	// Launch some rays!
 	raytrace(cam, shader, film, objectsList, lightSourceList);
 	tEnd = clock();
-	printf("Time taken: %.2fs\n", (double)(tEnd - tStart) / CLOCKS_PER_SEC);
+	printf("\n\n\tTime taken: %.2fs\n", (double)(tEnd - tStart) / CLOCKS_PER_SEC);
 	
 	// Save the final result to file
 	std::cout << "\n\nSaving the result to file " << fileName << "\n" << std::endl;

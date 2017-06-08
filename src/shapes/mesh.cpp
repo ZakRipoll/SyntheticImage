@@ -40,7 +40,7 @@ bool Mesh::loadOBJ(const char* filename)
 {
 	struct stat stbuffer;
 
-	std::cout << "Loading Mesh: " << filename << std::endl;
+	std::cout << "\n\n\tLoading Mesh: " << filename << std::endl;
 
 	FILE* f = fopen(filename, "rb");
 	if (f == NULL)
