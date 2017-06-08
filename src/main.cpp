@@ -25,6 +25,10 @@
 #include "materials\phong.h"
 #include "materials\mirror.h"
 #include "materials\transmisive.h"
+#include <time.h>
+
+clock_t tStart;
+clock_t tEnd;
 
 void buildOurScene(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsList ,std::vector<PointLightSource>* &lightSourceList, bool planes, bool spheres)
 {
@@ -32,42 +36,44 @@ void buildOurScene(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsList 
 	/* Materials */
 	/* ********* */
 	Material *redDiffuse = new Phong(Vector3D(0.7, 0.2, 0.3), Vector3D(0, 0, 0), 100);
+	Material *golbat = new Phong(Vector3D(0.556,0.219,0.556), Vector3D(), 100);
 	Material *greenDiffuse = new Phong(Vector3D(0.2, 0.7, 0.3), Vector3D(0, 0, 0), 100);
 	Material *greyDiffuse = new Phong(Vector3D(0.8, 0.8, 0.8), Vector3D(0, 0, 0), 100);
 	Material *blueDiffuse = new Phong(Vector3D(0.3, 0.2, 0.7), Vector3D(0, 0, 0), 100);
 	Material *red_100 = new Phong(Vector3D(0.7, 0.2, 0.3), Vector3D(0.7, 0.7, 0.2), 100);
+
 	Material * mirror = new Mirror(Vector3D(1, 0.9, 0.85));
 	Material * transmissive = new Transmisive(1.1, Vector3D(1));
 
 	objectsList = new std::vector<Shape*>;
 	/* OIBJECTS*/
 	Material* meshMaterial = new Phong(Vector3D(0.2, 0.7, 0.3), 50);
-	Shape* mesh = new Mesh("lee.obj", greenDiffuse);
+	Shape* mesh = new Mesh("lee.obj", golbat);
 	objectsList->push_back(mesh);
 
 	Mesh * m = (Mesh*)mesh;
 	/* **************************** */
 	/* Declare and place the camera */
 	/* **************************** */
-	Matrix4x4 cameraToWorld = Matrix4x4::translate(Vector3D(m->center.x, m->center.y, -m->halfSize.length()-20));
+	Matrix4x4 cameraToWorld = Matrix4x4::translate(Vector3D(m->center.x, m->center.y, m->center.z - 3*m->halfSize.length()));
 	double fovDegrees = 60;
 	double fovRadians = Utils::degreesToRadians(fovDegrees);
 	cam = new PerspectiveCamera(cameraToWorld, fovRadians, *film);
 	
-	double offset = m->halfSize.length() * 3 ;
+	double offset = m->halfSize.length();
 	
 	if (planes) {
 		
 		// Construct the Cornell Box
-		Shape *leftPlan = new InfinitePlane(Vector3D(-offset, 0, 0), Vector3D(1, 0, 0), redDiffuse);
-		Shape *rightPlan = new InfinitePlane(Vector3D(offset, 0, 0), Vector3D(-1, 0, 0), greenDiffuse);
-		Shape *topPlan = new InfinitePlane(Vector3D(0, offset, 0), Vector3D(0, -1, 0), greyDiffuse);
-		Shape *bottomPlan = new InfinitePlane(Vector3D(0, -offset, 0), Vector3D(0, 1, 0), greyDiffuse);
-		Shape *backPlan = new InfinitePlane(Vector3D(0, 0, 3 * offset), Vector3D(0, 0, -1), blueDiffuse);
+		//Shape *leftPlan = new InfinitePlane(Vector3D(m->center.x -offset, 0, 0), Vector3D(1, 0, 0), redDiffuse);
+		//Shape *rightPlan = new InfinitePlane(Vector3D(m->center.x + offset, 0, 0), Vector3D(-1, 0, 0), greenDiffuse);
+		//Shape *topPlan = new InfinitePlane(Vector3D(0, m->center.y + offset, 0), Vector3D(0, -1, 0), greyDiffuse);
+		Shape *bottomPlan = new InfinitePlane(Vector3D(0, m->center.y -offset, 0), Vector3D(0, 1, 0), greyDiffuse);
+		Shape *backPlan = new InfinitePlane(Vector3D(0, 0, m->center.z + offset), Vector3D(0, 0, -1), greenDiffuse);
 
-		objectsList->push_back(leftPlan);
-		objectsList->push_back(rightPlan);
-		objectsList->push_back(topPlan);
+		//objectsList->push_back(leftPlan);
+		//objectsList->push_back(rightPlan);
+		//objectsList->push_back(topPlan);
 		objectsList->push_back(bottomPlan);
 		objectsList->push_back(backPlan);
 	}
@@ -83,14 +89,16 @@ void buildOurScene(Camera* &cam, Film* &film, std::vector<Shape*>* &objectsList 
 		objectsList->push_back(s1);
 		objectsList->push_back(s2);
 	}
+
 	/* ****** */
 	/* Lights */
 	/* ****** */
 	lightSourceList = new std::vector<PointLightSource>;
-	Vector3D lightPosition1 = Vector3D(offset - 10, 10, -35);
-	Vector3D lightPosition2 = Vector3D(-offset + 10, 10 , -35);
-	Vector3D lightPosition3 = Vector3D(0, 0, offset - 10);
-	Vector3D intensity = Vector3D(54 * offset); // Radiant intensity (watts/sr)
+	Vector3D lightPosition1 = Vector3D(m->center.x - offset , m->center.y + offset/2 , m->center.z - offset/2);
+	Vector3D lightPosition2 = Vector3D(0 , m->center.y + offset, m->center.z - offset);
+	Vector3D lightPosition3 = Vector3D(m->center.x + offset , m->center.y + offset/2, m->center.z - offset/2);
+	Vector3D intensity = Vector3D(40 * offset); 
+	
 	PointLightSource pointLS1(lightPosition1, intensity);
 	PointLightSource pointLS2(lightPosition2, intensity);
 	PointLightSource pointLS3(lightPosition3, intensity);
@@ -227,12 +235,14 @@ int main()
 	std::vector<Shape*> *objectsList;
 	std::vector<PointLightSource> *lightSourceList;
 
+	tStart = clock();
 	//Menu APPLICATION Call
 	executeMenu(menu(), cam, shader, film, objectsList, lightSourceList, bgColor, intersectionColor, fileName);
-
 	// Launch some rays!
 	raytrace(cam, shader, film, objectsList, lightSourceList);
-
+	tEnd = clock();
+	printf("Time taken: %.2fs\n", (double)(tEnd - tStart) / CLOCKS_PER_SEC);
+	
 	// Save the final result to file
 	std::cout << "\n\nSaving the result to file " << fileName << "\n" << std::endl;
 	film->save(fileName);
